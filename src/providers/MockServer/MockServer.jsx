@@ -3,11 +3,12 @@ import { createServer } from 'miragejs';
 
 import tests from './data/tests';
 import bugs from './data/bugs';
+import raports from './data/raports';
 import testExecution from './data/testExecution';
 
 // DOCS: https://miragejs.com/tutorial/part-1/
 // Create new feature and add it to this list below
-const features = [tests, bugs, testExecution];
+const features = [tests, bugs, raports, testExecution];
 
 const makeModels = () => Object.assign(...features.map((feature) => feature.models));
 
@@ -23,7 +24,7 @@ const makeServer = () =>
   createServer({
     models: makeModels(),
     routes() {
-      this.namespace = 'api/';
+      this.namespace = 'https://fun-test-zpi.herokuapp.com/api/';
       this.post('Auth/login', () => {
         // tester
         return {
