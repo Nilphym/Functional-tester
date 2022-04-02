@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 
-import bugService, { bugTypes, bugStates } from '../../../services/bugs';
+import bugService, { bugTypes, bugStates } from '../../services/bugs';
 
 const successMessages = {
   createBug: 'Bug created successfully',
