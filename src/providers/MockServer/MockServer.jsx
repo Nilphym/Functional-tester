@@ -24,19 +24,13 @@ const makeServer = () =>
   createServer({
     models: makeModels(),
     routes() {
-      this.namespace = 'https://fun-test-zpi.herokuapp.com/api/';
+      this.urlPrefix = 'https://fun-test-zpi.herokuapp.com';
+      this.namespace = '/api/';
       this.post('Auth/login', () => {
-        // tester
         return {
           token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0ZWZhbkB3b3Jrc3BhY2UuY29tIiwidXNlcklkIjoiNGExNWUyZjctNTJkZC00ZTIyLWIwZjQtMjQxOTQ0MjE2Nzc1IiwibmFtZSI6Ik5vcmJlcnQiLCJzdXJuYW1lIjoiU3RlZmFuIiwicHJvZHVjdElkIjoiOTYzNDdlZTktOGY3My00OTM5LWFmMmUtMTIxMTJlN2U3NjFhIiwicHJvZHVjdE5hbWUiOiJQcm9kdWt0IzEiLCJyb2xlIjoiVGVzdGVyIiwiZXhwIjoyNjM2MzIwMzUwLCJpc3MiOiJGdW50ZXN0IiwiYXVkIjoiRnVudGVzdCJ9.-hHfCTVJgo_FG1gOQgeMqGDdec0VmEnlaNoKynEPLZg'
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0YTE1ZTJmNy01MmRkLTRlMjItYjBmNC0yNDE5NDQyMTY3NzUiLCJwcm9qZWN0SWQiOiI5NjM0N2VlOS04ZjczLTQ5MzktYWYyZS0xMjExMmU3ZTc2MWEiLCJwcm9qZWN0TmFtZSI6IlByb2R1a3QjMSIsIm5hbWUiOiJOb3JiZXJ0Iiwic3VybmFtZSI6IlN0ZWZhbiIsInJvbGUiOiJUZXN0ZXIiLCJleHAiOjI2MzYzMjAzNTB9.Y2OaBkdNlWh-GexJh3L7siQx0mdkOmhCgP5ic8rwY0Y'
         };
-
-        // developer
-        // return {
-        //   token:
-        //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InN0ZWZhbkB3b3Jrc3BhY2UuY29tIiwidXNlcklkIjoiNGExNWUyZjctNTJkZC00ZTIyLWIwZjQtMjQxOTQ0MjE2Nzc1IiwibmFtZSI6Ik5vcmJlcnQiLCJzdXJuYW1lIjoiU3RlZmFuIiwicHJvZHVjdElkIjoiOTYzNDdlZTktOGY3My00OTM5LWFmMmUtMTIxMTJlN2U3NjFhIiwicHJvZHVjdE5hbWUiOiJQcm9kdWt0IzEiLCJyb2xlIjoiRGV2ZWxvcGVyIiwiZXhwIjoyNjM2MzIwMzUwLCJpc3MiOiJGdW50ZXN0IiwiYXVkIjoiRnVudGVzdCJ9.xxInsV0kqM4hROoYCs3wqApbKpbhTWm7cCyhiNXcg0M'
-        // };
       });
 
       makeRoutes(this);

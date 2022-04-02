@@ -3,67 +3,57 @@ import axios from 'axios';
 import authService from './auth';
 import { API_URL, IMAGE_API_URL } from '../config';
 
-const instance = axios.create({ baseURL: API_URL });
+const axiosInstance = axios.create({ baseURL: API_URL });
 
-const server = (axiosInstance = instance) => ({
+const createConfig = (customHeaders) => {
+  return {
+    headers: {
+      ...authService.getAuthHeader(),
+      ...customHeaders
+    }
+  };
+};
+
+const server = {
   async get({ url }) {
-    const config = {
-      headers: {
-        ...authService.getAuthHeader()
-      }
-    };
-    const { data: fetchedData } = await axiosInstance.get(url, config);
+    const { data: fetchedData } = await axiosInstance.get(url, createConfig());
     return fetchedData;
   },
 
   async post({ url, data }) {
-    const config = {
-      headers: {
-        ...authService.getAuthHeader()
-      }
-    };
-    const { data: fetchedData } = await axiosInstance.post(url, data, config);
+    const { data: fetchedData } = await axiosInstance.post(url, data, createConfig());
     return fetchedData;
   },
 
   async put({ url, data }) {
-    const config = {
-      headers: {
-        ...authService.getAuthHeader()
-      }
-    };
-    const { data: fetchedData } = await axiosInstance.put(url, data, config);
+    const { data: fetchedData } = await axiosInstance.put(url, data, createConfig());
     return fetchedData;
   },
 
   async delete({ url }) {
-    const config = {
-      headers: {
-        ...authService.getAuthHeader()
-      }
-    };
-    const { data: fetchedData } = await axiosInstance.delete(url, config);
+    const { data: fetchedData } = await axiosInstance.delete(url, createConfig());
     return fetchedData;
   },
 
-  async postImage({ base64image, imageName }) {
+  async postImage({ imageBase64, name }) {
     const formData = new FormData();
-    formData.append('image', base64image);
-    formData.append('name', imageName);
+    formData.append('image', imageBase64);
+    formData.append('name', name);
 
-    const config = {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    };
     const {
       data: {
         data: {
           image: { url }
         }
       }
-    } = await axios.post(IMAGE_API_URL, formData, config);
+    } = await axios.post(
+      IMAGE_API_URL,
+      formData,
+      createConfig({ 'Content-Type': 'multipart/form-data' })
+    );
 
     return url;
   }
-});
+};
 
 export default server;

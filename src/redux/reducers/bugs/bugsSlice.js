@@ -1,178 +1,111 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { DateTime } from 'luxon';
 import { toast } from 'react-toastify';
 
-import server from '../../../services/server';
+import bugService, { bugTypes, bugStates } from '../../../services/bugs';
+
+const successMessages = {
+  createBug: 'Bug created successfully',
+  uploadImage: 'Attachment added successfully',
+  updateBug: 'Bug updated successfully',
+  rejectBug: 'Bug rejected successfully',
+  takeBug: 'Bug taken successfully',
+  resignFromBug: 'You resigned from bug successfully',
+  resolveBug: 'Bug resolved successfully',
+  deleteAttachment: 'Attachment deleted successfully'
+};
 
 const initialState = {
-  rows: [],
-  loading: true,
-  possibleValues: {},
-  bugDetails: {}
+  bugs: [],
+  bug: {},
+  options: {},
+  loading: true
 };
 
-export const getPossibleBugValues = createAsyncThunk('bugs/get/values', async () => {
-  const promises = [];
-  promises.push(server().get({ url: 'Errors/ErrorTypes' }));
-  promises.push(server().get({ url: 'Errors/ErrorImpacts' }));
-  promises.push(server().get({ url: 'Errors/ErrorPriorities' }));
+//* ****** GET REQUESTS ****** *//
 
-  const resolved = await Promise.all(promises);
-
-  const data = {
-    types: resolved[0],
-    impacts: resolved[1],
-    priorities: resolved[2]
-  };
-
-  return data;
+export const getBug = createAsyncThunk('bugs/get', async ({ bugId }) => {
+  const bug = await bugService.getBug({ bugId });
+  return bug;
 });
 
-const prepareDataForView = (rows) => {
-  return rows.map((row) => ({
-    ...row,
-    state: row.errorState,
-    type: row.errorType,
-    impact: row.errorImpact,
-    priority: row.errorPriority,
-    retests: [row.retestsRequired, row.retestsDone, row.retestsFailed].join(' / '),
-    deadline: row.deadline ? DateTime.fromISO(row.deadline).toFormat('MM/dd/yyyy') : null,
-    reportDate: DateTime.fromISO(row.reportDate).toFormat('MM/dd/yyyy'),
-    endDate: row.endDate ? DateTime.fromISO(row.endDate).toFormat('MM/dd/yyyy') : null,
-    attachments: row.attachments.map((attachment) => ({
-      ...attachment,
-      image: attachment.imageLink
-    }))
-  }));
-};
+export const getAllBugs = createAsyncThunk('bugs/get/all', async () => {
+  const bugs = await bugService.getBugs();
+  return bugs;
+});
 
 export const getBugsToFix = createAsyncThunk('bugs/get/fix', async () => {
-  const data = await server().get({ url: 'Errors/toFix' });
-  const errorsWithAttachments = await Promise.all(
-    data.map(async (error) => ({
-      ...error,
-      attachments: await (async () => {
-        const attachments = await server().get({ url: `Attachments/error/${error.id}` });
-        return attachments;
-      })()
-    }))
-  );
-  return prepareDataForView(errorsWithAttachments);
+  const bugs = await bugService.getBugs({ type: bugTypes.toFix });
+  return bugs;
 });
 
 export const getBugsToRetest = createAsyncThunk('bugs/get/retest', async () => {
-  const data = await server().get({ url: 'Errors/toRetest' });
-  const errorsWithAttachments = await Promise.all(
-    data.map(async (error) => ({
-      ...error,
-      attachments: await (async () => {
-        const attachments = await server().get({ url: `Attachments/error/${error.id}` });
-        return attachments;
-      })()
-    }))
-  );
-  return prepareDataForView(errorsWithAttachments);
+  const bugs = await bugService.getBugs({ type: bugTypes.toRetest });
+  return bugs;
 });
 
-export const getAllBugs = createAsyncThunk('bugs/get/all', async ({ productId }) => {
-  const data = await server().get({ url: `Project/${productId}/Errors` });
-  const errorsWithAttachments = await Promise.all(
-    data.map(async (error) => ({
-      ...error,
-      attachments: await (async () => {
-        const attachments = await server().get({ url: `Attachments/error/${error.id}` });
-        return attachments;
-      })()
-    }))
-  );
-  return prepareDataForView(errorsWithAttachments);
+export const getBugsDeveloper = createAsyncThunk('bugs/get/developer', async () => {
+  const bugs = await bugService.getBugs({ type: bugTypes.developer });
+  return bugs;
 });
 
-export const getBugsDeveloper = createAsyncThunk('bugs/get/developer', async ({ developerId }) => {
-  const data = await server().get({ url: `Errors/developer/${developerId}` });
-  const errorsWithAttachments = await Promise.all(
-    data.map(async (error) => ({
-      ...error,
-      attachments: await (async () => {
-        const attachments = await server().get({ url: `Attachments/error/${error.id}` });
-        return attachments;
-      })()
-    }))
-  );
-  return prepareDataForView(errorsWithAttachments);
+export const getBugOptions = createAsyncThunk('bugs/get/options', async () => {
+  const options = await bugService.getOptions();
+  return options;
 });
 
-export const getBug = createAsyncThunk('bugs/get', async ({ errorId }) => {
-  const data = await server().get({ url: `Errors/${errorId}` });
-  const errorWithAttachments = await {
-    ...data,
-    attachments: await (async () => {
-      const attachments = await server().get({ url: `Attachments/error/${data.id}` });
-      return attachments;
-    })()
-  };
-  return prepareDataForView([errorWithAttachments])[0];
+//* ****** POST REQUESTS ****** *//
+
+export const createBug = createAsyncThunk('bugs/post', async ({ newBugData }) => {
+  const bug = await bugService.postBug({ newBugData });
+  return bug;
 });
 
-export const postBug = createAsyncThunk('bugs/post', async ({ json }) => {
-  const data = await server().post({ url: 'Errors', data: json });
-  return data;
-});
-
-const prepareDataForServer = (json) => {
-  return {
-    ...json,
-    errorType: json.type,
-    errorImpact: json.impact,
-    errorPriority: json.priority,
-    deadline: json.deadline
-      ? DateTime.fromFormat(json.deadline, 'MM/dd/yyyy').toISO().substring(0, 19)
-      : ''
-  };
-};
-
-export const putRows = createAsyncThunk('bugs/put/all', async ({ id, json }) => {
-  const data = await server().put({ url: `Errors/${id}`, data: prepareDataForServer(json) });
-  return data;
-});
-
-export const rejectBug = createAsyncThunk('bugs/reject', async ({ id, developerId }) => {
-  const data = await server().put({ url: `Errors/reject/${id}`, data: { developerId } });
-  return data;
-});
-
-export const resolveBug = createAsyncThunk('bugs/resolve', async ({ id, retestsRequired }) => {
-  const data = await server().put({ url: `Errors/fixed/${id}`, data: { retestsRequired } });
-  return data;
-});
-
-export const takeBug = createAsyncThunk('bugs/take', async ({ id, developerId }) => {
-  const data = await server().put({ url: `Errors/open/${id}`, data: { developerId } });
-  return data;
-});
-
-export const resignFromBug = createAsyncThunk('bugs/resign', async ({ id, developerId }) => {
-  const data = await server().put({ url: `Errors/resign/${id}`, data: { developerId } });
-  return data;
-});
-
-export const deleteBugAttachment = createAsyncThunk(
-  'bugs/attachments/delete',
-  async ({ bugId, id }) => {
-    await server().delete({ url: `Attachments/${id}` });
-    return { bugId, id };
+export const uploadImage = createAsyncThunk(
+  'bugs/attachments/post',
+  async ({ bugId, imageBase64, imageName }) => {
+    const attachment = await bugService.postAttachment({ bugId, imageBase64, imageName });
+    return { bugId, attachment };
   }
 );
 
-export const postImage = createAsyncThunk(
-  'bugs/attachments/post',
-  async ({ base64image, imageName, errorId }) => {
-    const imageUrl = await server().postImage({ base64image, imageName });
-    const id = await server().post({
-      url: 'Attachments',
-      data: { imageLink: imageUrl, errorId }
-    });
-    return { id, errorId, imageUrl };
+//* ****** PUT REQUESTS ****** *//
+
+export const updateBug = createAsyncThunk('bugs/put/all', async ({ id, updatedBugData }) => {
+  const bug = await bugService.putBug({ id, updatedBugData });
+  return bug;
+});
+
+export const rejectBug = createAsyncThunk('bugs/reject', async ({ id }) => {
+  const bug = await bugService.changeBugState({ id, state: bugStates.rejected });
+  return bug;
+});
+
+export const takeBug = createAsyncThunk('bugs/take', async ({ id }) => {
+  const bug = await bugService.changeBugState({ id, state: bugStates.taken });
+  return bug;
+});
+
+export const resignFromBug = createAsyncThunk('bugs/resign', async ({ id }) => {
+  const bug = await bugService.changeBugState({ id, state: bugStates.resigned });
+  return bug;
+});
+
+export const resolveBug = createAsyncThunk('bugs/resolve', async ({ id, retestsRequired }) => {
+  const bug = await bugService.changeBugState({
+    id,
+    state: bugStates.resolved,
+    retestsRequired
+  });
+  return bug;
+});
+
+//* ****** DELETE REQUESTS ****** *//
+
+export const deleteAttachment = createAsyncThunk(
+  'bugs/attachments/delete',
+  async ({ id, bugId }) => {
+    await bugService.deleteAttachment({ id });
+    return { id, bugId };
   }
 );
 
@@ -181,36 +114,15 @@ export const bugsSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(getPossibleBugValues.fulfilled, (state, action) => {
-        state.possibleValues = action.payload;
-      })
-      .addCase(getPossibleBugValues.rejected, (_, action) => {
-        toast.error(action.error.message);
-      })
-
-      .addCase(getBugsToFix.pending, (state) => {
+      .addCase(getBug.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getBugsToFix.fulfilled, (state, action) => {
+      .addCase(getBug.fulfilled, (state, action) => {
         state.loading = false;
-        state.rows = action.payload;
+        state.bug = action.payload;
       })
-      .addCase(getBugsToFix.rejected, (state, action) => {
+      .addCase(getBug.rejected, (state, action) => {
         state.loading = false;
-        state.rows = [];
-        toast.error(action.error.message);
-      })
-
-      .addCase(getBugsToRetest.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getBugsToRetest.fulfilled, (state, action) => {
-        state.loading = false;
-        state.rows = action.payload;
-      })
-      .addCase(getBugsToRetest.rejected, (state, action) => {
-        state.loading = false;
-        state.rows = [];
         toast.error(action.error.message);
       })
 
@@ -219,11 +131,34 @@ export const bugsSlice = createSlice({
       })
       .addCase(getAllBugs.fulfilled, (state, action) => {
         state.loading = false;
-        state.rows = action.payload;
+        state.bugs = action.payload;
       })
       .addCase(getAllBugs.rejected, (state, action) => {
         state.loading = false;
-        state.rows = [];
+        toast.error(action.error.message);
+      })
+
+      .addCase(getBugsToFix.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getBugsToFix.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bugs = action.payload;
+      })
+      .addCase(getBugsToFix.rejected, (state, action) => {
+        state.loading = false;
+        toast.error(action.error.message);
+      })
+
+      .addCase(getBugsToRetest.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getBugsToRetest.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bugs = action.payload;
+      })
+      .addCase(getBugsToRetest.rejected, (state, action) => {
+        state.loading = false;
         toast.error(action.error.message);
       })
 
@@ -232,94 +167,85 @@ export const bugsSlice = createSlice({
       })
       .addCase(getBugsDeveloper.fulfilled, (state, action) => {
         state.loading = false;
-        state.rows = action.payload;
+        state.bugs = action.payload;
       })
       .addCase(getBugsDeveloper.rejected, (state, action) => {
         state.loading = false;
-        state.rows = [];
         toast.error(action.error.message);
       })
 
-      .addCase(getBug.pending, (state) => {
+      .addCase(getBugOptions.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getBug.fulfilled, (state, action) => {
+      .addCase(getBugOptions.fulfilled, (state, action) => {
         state.loading = false;
-        state.bugDetails = action.payload;
+        state.options = action.payload;
       })
-      .addCase(getBug.rejected, (state, action) => {
+      .addCase(getBugOptions.rejected, (state, action) => {
         state.loading = false;
-        state.bugDetails = {};
         toast.error(action.error.message);
       })
 
-      .addCase(putRows.fulfilled, () => {
-        toast.success('Bug updated successfully');
+      .addCase(createBug.fulfilled, (state, action) => {
+        state.bugs.push(action.payload);
+        toast.success(successMessages.createBug);
       })
-      .addCase(putRows.rejected, (_, action) => {
+      .addCase(createBug.rejected, (_, action) => {
+        toast.error(action.error.message);
+      })
+
+      .addCase(uploadImage.fulfilled, (state, action) => {
+        const relatedBug = state.bugs.find((bug) => bug.id === action.payload.bugId);
+        relatedBug.attachments.push(action.payload.attachment);
+        toast.success(successMessages.uploadImage);
+      })
+      .addCase(uploadImage.rejected, (_, action) => {
+        toast.error(action.error.message);
+      })
+
+      .addCase(updateBug.fulfilled, () => {
+        toast.success(successMessages.updateBug);
+      })
+      .addCase(updateBug.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
       .addCase(rejectBug.fulfilled, () => {
-        toast.success('Bug rejected successfully');
+        toast.success(successMessages.rejectBug);
       })
       .addCase(rejectBug.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
-      .addCase(resolveBug.fulfilled, () => {
-        toast.success('Bug resolved successfully');
-      })
-      .addCase(resolveBug.rejected, (_, action) => {
-        toast.error(action.error.message);
-      })
-
       .addCase(takeBug.fulfilled, () => {
-        toast.success('Bug taken successfully');
+        toast.success(successMessages.takeBug);
       })
       .addCase(takeBug.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
       .addCase(resignFromBug.fulfilled, () => {
-        toast.success('You resigned from bug successfully');
+        toast.success(successMessages.resignFromBug);
       })
       .addCase(resignFromBug.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
-      .addCase(deleteBugAttachment.fulfilled, (state, action) => {
-        state.rows = state.rows.map((row) =>
-          row.id === action.payload.bugId
-            ? {
-                ...row,
-                attachments: row.attachments.filter(
-                  (attachment) => attachment.id !== action.payload.id
-                )
-              }
-            : row
-        );
-        toast.success('Attachment deleted successfully');
+      .addCase(resolveBug.fulfilled, () => {
+        toast.success(successMessages.resolveBug);
       })
-      .addCase(deleteBugAttachment.rejected, (_, action) => {
+      .addCase(resolveBug.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
-      .addCase(postImage.fulfilled, (state, action) => {
-        state.rows = state.rows.map((row) =>
-          row.id === action.payload.errorId
-            ? {
-                ...row,
-                attachments: [
-                  ...row.attachments,
-                  { id: action.payload.id, image: action.payload.imageUrl }
-                ]
-              }
-            : row
+      .addCase(deleteAttachment.fulfilled, (state, action) => {
+        const relatedBug = state.bugs.find((bug) => bug.id === action.payload.bugId);
+        relatedBug.attachments = relatedBug.attachments.filter(
+          (attachment) => attachment.id !== action.payload.attachmentId
         );
-        toast.success('Attachment added successfully');
+        toast.success(successMessages.deleteAttachment);
       })
-      .addCase(postImage.rejected, (_, action) => {
+      .addCase(deleteAttachment.rejected, (_, action) => {
         toast.error(action.error.message);
       });
   }

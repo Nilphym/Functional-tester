@@ -37,16 +37,7 @@ const prepareDataForView = ({ chart, bugs }) => {
   });
 
   return {
-    ...chart,
-    bugsAll: bugs.length,
-    bugsFixed: bugs.filter(({ errorState }) => errorState === 'Closed').length,
-    bugsRejected: bugs.filter(({ errorState }) => errorState === 'Rejected').length,
-    bugsByImpact: Object.entries(bugsByImpact).map(([name, value]) => ({ name, value })),
-    bugsByPriority: Object.entries(bugsByPriority).map(([name, value]) => ({ name, value })),
-    testSuitesByName: chart.testSuitesByName.map(({ name, numberOfTest }) => ({
-      name,
-      value: numberOfTest
-    }))
+    ...chart
   };
 };
 
