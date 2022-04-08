@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import authReducer from './reducers/auth/authSlice';
+import authReducer from './reducers/authSlice';
 import testReducer from './reducers/test/testSlice';
 import bugsReducer from './reducers/bugsSlice';
 import testPlanReducer from './reducers/testPlan/testPlanSlice';
@@ -22,7 +22,7 @@ const store = configureStore({
 });
 
 export default store;
-export * from './reducers/auth/authSlice';
+export * from './reducers/authSlice';
 export * from './reducers/test/testSlice';
 export * from './reducers/bugsSlice';
 export * from './reducers/testPlan/testPlanSlice';

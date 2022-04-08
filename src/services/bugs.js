@@ -34,18 +34,18 @@ const bugService = {
     return bugs;
   },
 
-  async getBug({ bugId }) {
-    const bug = await server.get({ url: `bugs/${bugId}` });
+  async getBug({ id }) {
+    const bug = await server.get({ url: `bugs/${id}` });
     return bug;
   },
 
-  async postBug({ newBugData }) {
-    const bug = await server.post({ url: 'bugs', newBugData });
+  async postBug({ data }) {
+    const bug = await server.post({ url: 'bugs', data });
     return bug;
   },
 
-  async putBug({ id, updatedBugData }) {
-    const bug = await server.put({ url: `bugs/${id}`, updatedBugData });
+  async putBug({ id, data }) {
+    const bug = await server.put({ url: `bugs/${id}`, data });
     return bug;
   },
 

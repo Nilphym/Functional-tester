@@ -23,8 +23,8 @@ const initialState = {
 
 //* ****** GET REQUESTS ****** *//
 
-export const getBug = createAsyncThunk('bugs/get', async ({ bugId }) => {
-  const bug = await bugService.getBug({ bugId });
+export const getBug = createAsyncThunk('bugs/get', async ({ id }) => {
+  const bug = await bugService.getBug({ id });
   return bug;
 });
 
@@ -55,13 +55,13 @@ export const getBugOptions = createAsyncThunk('bugs/get/options', async () => {
 
 //* ****** POST REQUESTS ****** *//
 
-export const createBug = createAsyncThunk('bugs/post', async ({ newBugData }) => {
-  const bug = await bugService.postBug({ newBugData });
+export const createBug = createAsyncThunk('bugs/post', async ({ data }) => {
+  const bug = await bugService.postBug({ data });
   return bug;
 });
 
 export const uploadImage = createAsyncThunk(
-  'bugs/attachments/post',
+  'bugs/post/attachments',
   async ({ bugId, imageBase64, imageName }) => {
     const attachment = await bugService.postAttachment({ bugId, imageBase64, imageName });
     return { bugId, attachment };
@@ -70,8 +70,8 @@ export const uploadImage = createAsyncThunk(
 
 //* ****** PUT REQUESTS ****** *//
 
-export const updateBug = createAsyncThunk('bugs/put/all', async ({ id, updatedBugData }) => {
-  const bug = await bugService.putBug({ id, updatedBugData });
+export const updateBug = createAsyncThunk('bugs/put', async ({ id, data }) => {
+  const bug = await bugService.putBug({ id, data });
   return bug;
 });
 
@@ -102,7 +102,7 @@ export const resolveBug = createAsyncThunk('bugs/resolve', async ({ id, retestsR
 //* ****** DELETE REQUESTS ****** *//
 
 export const deleteAttachment = createAsyncThunk(
-  'bugs/attachments/delete',
+  'bugs/delete/attachments',
   async ({ id, bugId }) => {
     await bugService.deleteAttachment({ id });
     return { id, bugId };

@@ -1,14 +1,18 @@
 import axios from 'axios';
 
-import authService from './auth';
-import { API_URL, IMAGE_API_URL } from '../config';
+import { API_URL, IMAGE_API_URL, TOKEN_KEY } from '../config';
 
 const axiosInstance = axios.create({ baseURL: API_URL });
+
+const getAuthHeader = () => {
+  const token = localStorage.getItem(TOKEN_KEY);
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 const createConfig = (customHeaders) => {
   return {
     headers: {
-      ...authService.getAuthHeader(),
+      ...getAuthHeader(),
       ...customHeaders
     }
   };
