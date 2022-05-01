@@ -1,6 +1,6 @@
 import React from 'react';
 
-import BugTable, { bugTableTypes } from './BugTable';
+import BugTable, { bugTableTypes } from '../BugTable/BugTable';
 
 export default {
   title: 'Nilphym/Bug Table',

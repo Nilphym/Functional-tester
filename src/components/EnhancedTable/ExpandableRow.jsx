@@ -25,7 +25,7 @@ import {
 
 import getImageName from '../../utils/getImageName';
 import { ImageCarousel } from '../ImageCarousel/ImageCarousel';
-import { postImage } from '../../redux/store';
+import { uploadImage } from '../../redux/store';
 
 const TextButton = styled('button')(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -158,10 +158,10 @@ const ExpandableRow = ({ colSpan, data, open }) => {
       reader.onload = async () => {
         const regex = new RegExp(/(data:\w+\/\w+;base64,)(.+)/gm);
         dispatch(
-          postImage({
-            base64image: regex.exec(reader.result)[2],
-            imageName: file.name.split('.')[0],
-            errorId: data.id
+          uploadImage({
+            bugId: data.id,
+            imageBase64: regex.exec(reader.result)[2],
+            imageName: file.name.split('.')[0]
           })
         );
       };
@@ -232,9 +232,9 @@ const ExpandableRow = ({ colSpan, data, open }) => {
                   }}
                 >
                   <Typography variant="overline">Attachments</Typography>
-                  {value.map(({ id, image }, index) => (
+                  {value.map(({ id, url }, index) => (
                     <TextButton key={id} onClick={() => toggleCarousel(true, index)}>
-                      {getImageName(image)}
+                      {getImageName(url)}
                     </TextButton>
                   ))}
                   <Box

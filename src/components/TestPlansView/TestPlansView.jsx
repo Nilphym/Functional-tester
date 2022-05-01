@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { postTestPlan, getProductTestPlansById } from '../../redux/store';
+// import { postTestPlan, getProductTestPlansById } from '../../redux/store';
 import TestPlanItem from './TestPlanItem';
 import Error from '../Error/Error';
 
@@ -25,15 +25,15 @@ export const TestPlansView = () => {
 
   useEffect(() => {
     async function getProductTestPlanData() {
-      await dispatch(getProductTestPlansById());
+      // await dispatch(getProductTestPlansById());
     }
     getProductTestPlanData();
   }, []);
 
   async function addTestPlan() {
     const testPlanName = getValues('testPlanName');
-    await dispatch(postTestPlan(testPlanName));
-    await dispatch(getProductTestPlansById());
+    // await dispatch(postTestPlan(testPlanName));
+    // await dispatch(getProductTestPlansById());
     setIsAddingTestPlan(false);
     reset(
       { testPlanName: '' },

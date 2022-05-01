@@ -1,7 +1,7 @@
 import { Box, Typography, CircularProgress } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUsers, deleteUser, setIsLoadingUsers } from '../../redux/store';
+import { getUsers, deleteUser } from '../../redux/store';
 import UserItem from './UserItem';
 
 const DeleteUserPanel = () => {
@@ -15,7 +15,7 @@ const DeleteUserPanel = () => {
 
   async function deleteUserById(userName) {
     await dispatch(deleteUser({ userName }));
-    setIsLoadingUsers(true);
+    // setIsLoadingUsers(true);
     useRefresh((state) => !state);
   }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Typography, Avatar } from '@mui/material';
 
-const NavProfile = ({ avatar, name, compact }) => {
+export const NavProfile = ({ avatar, name, compact }) => {
   return (
     <Box
       sx={{
@@ -27,8 +27,6 @@ const NavProfile = ({ avatar, name, compact }) => {
     </Box>
   );
 };
-
-export default NavProfile;
 
 NavProfile.propTypes = {
   avatar: PropTypes.string,

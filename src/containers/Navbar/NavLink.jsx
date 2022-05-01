@@ -26,7 +26,7 @@ const StyledLink = styled(Link, {
   })
 }));
 
-const NavLink = ({ pathname, icon, text, destination, compact }) => {
+export const NavLink = ({ pathname, icon, text, destination, compact }) => {
   const regex = new RegExp(destination);
 
   return (
@@ -52,5 +52,3 @@ NavLink.propTypes = {
 NavLink.defaultProps = {
   compact: false
 };
-
-export default NavLink;

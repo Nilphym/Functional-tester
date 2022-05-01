@@ -30,12 +30,12 @@ import {
   getBugsToRetest,
   getAllBugs,
   getBugsDeveloper,
-  putRows,
+  updateBug,
   resolveBug,
   rejectBug,
   takeBug,
   resignFromBug,
-  getPossibleBugValues,
+  getBugOptions,
   setExecutionBugId
 } from '../../redux/store';
 
@@ -72,23 +72,27 @@ export const BugTable = ({ type }) => {
   const navigate = useNavigate();
   const { handleSubmit, setValue, control } = useForm();
   const [dialog, setDialog] = useState({ open: false, content: null, action: null });
-  const { productId, userId: developerId } = useSelector((state) => state.auth.token);
-  const { rows, loading } = useSelector((state) => state.bugs);
-  const { types, impacts, priorities } = useSelector((state) => state.bugs.possibleValues);
+  const { userId: developerId } = useSelector((state) => state.auth.token);
+  const {
+    bugs,
+    loading,
+    loadingOptions,
+    options: { impacts, priorities, types }
+  } = useSelector((state) => state.bugs);
 
   const fetchBugs = async () => {
     switch (type) {
       case bugTableTypes.all:
-        await dispatch(getAllBugs({ productId }));
-        break;
-      case bugTableTypes.toRetest:
-        await dispatch(getBugsToRetest());
+        await dispatch(getAllBugs());
         break;
       case bugTableTypes.active:
         await dispatch(getBugsToFix());
         break;
+      case bugTableTypes.toRetest:
+        await dispatch(getBugsToRetest());
+        break;
       case bugTableTypes.assigned:
-        await dispatch(getBugsDeveloper({ developerId }));
+        await dispatch(getBugsDeveloper());
         break;
       default:
         navigate('/dashboard');
@@ -98,7 +102,7 @@ export const BugTable = ({ type }) => {
 
   useEffect(() => {
     fetchBugs();
-    dispatch(getPossibleBugValues());
+    dispatch(getBugOptions());
   }, [type]);
 
   const closeDialog = () => {
@@ -350,14 +354,10 @@ export const BugTable = ({ type }) => {
   const onSubmitBugStatus = async (arg) => {
     closeDialog();
     await dispatch(dialog.action(arg));
-    await fetchBugs();
   };
 
-  const onSubmitBugDetails = async (json) => {
-    const { id } = json;
-    delete json.id;
-    await dispatch(putRows({ id, json }));
-    await fetchBugs();
+  const onSubmitBugDetails = async (data) => {
+    await dispatch(updateBug({ data }));
   };
 
   const prepareRows = (rows) =>
@@ -399,7 +399,7 @@ export const BugTable = ({ type }) => {
       ]
     }));
 
-  return loading ? (
+  return loading || loadingOptions ? (
     <Box
       sx={{
         width: '100%',
@@ -413,7 +413,7 @@ export const BugTable = ({ type }) => {
     </Box>
   ) : (
     <>
-      <EnhancedTable title="Bugs" initialPageSize={5} data={prepareRows(rows)} columns={columns} />
+      <EnhancedTable title="Bugs" initialPageSize={5} data={prepareRows(bugs)} columns={columns} />
       <Dialog open={dialog.open} onClose={closeDialog}>
         <form onSubmit={handleSubmit(onSubmitBugStatus)}>
           <DialogTitle>Are you sure?</DialogTitle>

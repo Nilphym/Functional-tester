@@ -5,7 +5,7 @@ import testReducer from './reducers/test/testSlice';
 import bugsReducer from './reducers/bugsSlice';
 import testPlanReducer from './reducers/testPlan/testPlanSlice';
 import testExecutionReducer from './reducers/testExecution/testExecutionSlice';
-import raportsReducer from './reducers/raports/raportsSlice';
+import raportsReducer from './reducers/raportsSlice';
 
 const reducer = {
   auth: authReducer,
@@ -27,4 +27,4 @@ export * from './reducers/test/testSlice';
 export * from './reducers/bugsSlice';
 export * from './reducers/testPlan/testPlanSlice';
 export * from './reducers/testExecution/testExecutionSlice';
-export * from './reducers/raports/raportsSlice';
+export * from './reducers/raportsSlice';

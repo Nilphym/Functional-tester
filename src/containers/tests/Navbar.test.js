@@ -5,7 +5,7 @@ import { ThemeProvider } from '@mui/system';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import store from '../../redux/store';
 
-import Navbar from './Navbar';
+import Navbar from '../Navbar/Navbar';
 import theme from '../../utils/theme';
 
 describe('Navbar component', () => {

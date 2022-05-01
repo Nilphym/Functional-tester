@@ -7,17 +7,17 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Navbar } from './containers';
 
-const openPaths = ['/login', '/resetPassword', '/register'];
+const unsecuredPaths = ['/login', '/resetPassword', '/register'];
 
 const Layout = () => {
   const { token } = useSelector((state) => state.auth);
   const { pathname } = useLocation();
 
-  if (!token && !openPaths.includes(pathname)) {
+  if (!token && !unsecuredPaths.includes(pathname)) {
     return <Navigate to="login" />;
   }
 
-  if (!token && openPaths.includes(pathname)) {
+  if (!token && unsecuredPaths.includes(pathname)) {
     return (
       <Box sx={{ width: '100%', height: '100vh' }}>
         <Outlet />
@@ -26,15 +26,17 @@ const Layout = () => {
     );
   }
 
-  const links = [
-    { icon: 'dashboard', text: 'Dashboard', destination: '/dashboard' },
-    { icon: 'tests', text: 'Test Plans', destination: '/testPlans' }
-  ];
+  if (token && unsecuredPaths.includes(pathname)) {
+    return <Navigate to="dashboard" />;
+  }
+
+  const links = [{ icon: 'dashboard', text: 'Dashboard', destination: '/dashboard' }];
 
   switch (token.role) {
     case 'Tester':
       links.push(
         ...[
+          { icon: 'tests', text: 'Test plans', destination: '/testPlans' },
           {
             icon: 'bugs',
             name: 'Bugs',
@@ -66,9 +68,10 @@ const Layout = () => {
     case 'ProjectManager':
       links.push(
         ...[
+          { icon: 'tests', text: 'Test plans', destination: '/testPlans' },
           { icon: 'bugs', text: 'Bugs', destination: '/bugs' },
-          { icon: 'addUser', text: 'Invite User', destination: '/inviteUser' },
-          { icon: 'deleteUser', text: 'Delete User', destination: '/deleteUser' },
+          { icon: 'addUser', text: 'Invite user', destination: '/inviteUser' },
+          { icon: 'deleteUser', text: 'Delete user', destination: '/deleteUser' },
           { icon: 'logout', text: 'Logout', destination: '/logout' }
         ]
       );

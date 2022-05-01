@@ -1,21 +1,37 @@
+import React, { useEffect } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { styled } from '@mui/system';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
-import React from 'react';
+import { toast } from 'react-toastify';
 
+import server from '../../services/server';
 import { login } from '../../redux/store';
 import logo from '../../assets/logo/logo2.png';
 
 const Logo = styled('img')({
-  width: '12.5rem',
-  position: 'absolute',
-  top: '50%',
-  left: '2%',
-  transform: 'translateY(-50%)'
+  width: '12.5rem'
+});
+
+const Container = styled(Box)({
+  height: '100vh',
+  margin: '0 auto',
+  width: '20rem',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '1.5rem'
+});
+
+const Form = styled(Box)({
+  width: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '0.8rem'
 });
 
 const formFields = {
@@ -29,32 +45,51 @@ const defaultValues = {
 };
 
 const schema = yup.object().shape({
-  [formFields.login]: yup.string().required(),
+  [formFields.login]: yup.string().required('Login field cannot be empty!'),
   [formFields.password]: yup
     .string()
-    .required()
-    .min(8)
-    .matches(RegExp('(.*[a-z].*)'), 'Lowercase')
-    .matches(RegExp('(.*[A-Z].*)'), 'Uppercase')
-    .matches(RegExp('(.*\\d.*)'), 'Number')
-    .matches(RegExp('[!@#$%^&*(),.?":{}|<>]'), 'Special')
+    .required('Password field cannot be empty!')
+    .min(8, 'Password field must contain min. 8 letters!')
+    .matches(RegExp('(.*[a-z].*)'), 'Password field must contain min. 1 lowercase letter!')
+    .matches(RegExp('(.*[A-Z].*)'), 'Password field must contain min. 1 uppercase letter!')
+    .matches(RegExp('(.*\\d.*)'), 'Password field must contain min. 1 digit!')
+    .matches(RegExp('[!@#$%^&*(),.?":{}|<>]'), 'Password field must contain min. 1 special sign!')
 });
 
 export const LoginPanel = () => {
-  const dispatch = useDispatch();
-  const { state } = useLocation();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-  const from = state ? state.from.pathname : '/dashboard';
-
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     defaultValues,
     resolver: yupResolver(schema)
   });
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const onClick = (evt) => {
+      const login = evt.target.textContent.split(' ')[1];
+      setValue(formFields.login, login);
+      setValue(formFields.password, 'Password123!');
+    };
+
+    const getUsers = async () => {
+      const users = await server.get({ url: 'https://fun-test-zpi.herokuapp.com/api/users' });
+      users.forEach((user) => {
+        toast.info(`${user.role}: ${user.login}`, {
+          autoClose: false,
+          closeOnClick: false,
+          onClick
+        });
+      });
+    };
+    getUsers();
+
+    toast.info('Click on login to autofill');
+  }, []);
 
   const onSubmit = async ({ login: email, password }) => {
     await dispatch(login({ email, password }));
@@ -64,112 +99,55 @@ export const LoginPanel = () => {
     });
   };
 
-  const StyledLink = styled(Link)({
-    color: 'blue',
-    '&:visited': {
-      color: 'blue'
-    },
-    '&:focus, &:hover, &:active': {
-      color: 'grey'
-    }
-  });
-  // 1rem <=> 16px
-  return isLoggedIn ? (
-    <Navigate to={from} replace />
-  ) : (
-    <Box>
-      <Box
-        sx={{
-          width: '12.5rem',
-          height: '8vh',
-          position: 'absolute',
-          top: '20%',
-          left: '49%',
-          transform: 'translateX(-50%)'
-        }}
-      >
-        <Logo src={logo} alt="logo" />
-      </Box>
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '33%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Typography align="center" variant="h2" gutterBottom component="div">
-          Login Panel
-        </Typography>
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
+  return (
+    <Container>
+      <Logo src={logo} alt="logo" />
+      <Typography variant="h2">Login Panel</Typography>
+      <Form component="form" onSubmit={handleSubmit(onSubmit)}>
+        <Controller
+          name={formFields.login}
+          control={control}
+          render={({ field }) => (
+            <TextField
+              id={formFields.login}
+              label="Login"
+              type="text"
+              error={!!errors.login}
+              helperText={!!errors.login && errors.login.message}
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name={formFields.password}
+          control={control}
+          render={({ field }) => (
+            <TextField
+              id={formFields.password}
+              label="Password"
+              type="password"
+              error={!!errors.password}
+              helperText={!!errors.password && errors.password.message}
+              {...field}
+            />
+          )}
+        />
+        <Link to="/register">Register a new product -&gt;</Link>
+        <Button
+          type="submit"
+          variant="contained"
           sx={{
-            display: 'flex',
-            flexDirection: 'column'
+            height: '3rem'
           }}
         >
-          <Controller
-            name={formFields.login}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                id={formFields.login}
-                label="Login"
-                type="text"
-                error={!!errors.login}
-                helperText={!!errors.login && 'Login field cannot be empty!'}
-                {...field}
-                sx={{
-                  marginTop: '0.625rem',
-                  width: '21.875rem'
-                }}
-              />
-            )}
-          />
-          <Controller
-            name={formFields.password}
-            control={control}
-            render={({ field }) => (
-              <TextField
-                id={formFields.password}
-                label="Password"
-                type="password"
-                error={!!errors.password}
-                helperText={
-                  !!errors.password &&
-                  `Password field cannot be empty and must contain min. 8 letters, 
-                  lowercase, uppercase, digit and special sign!`
-                }
-                {...field}
-                sx={{
-                  margin: '0.625rem 0 0.625rem 0',
-                  width: '21.875rem'
-                }}
-              />
-            )}
-          />
-          <StyledLink to="/register">Register a new product -&gt;</StyledLink>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              height: '3.125rem',
-              marginTop: '0.625rem',
-              marginBottom: '1.25rem'
-            }}
-          >
-            Login
-          </Button>
-          <Box>
-            <Typography>Have you forgot your password?</Typography>
-            <StyledLink to="/resetPassword">Reset password</StyledLink>
-          </Box>
+          Login
+        </Button>
+        <Box>
+          <Typography>Have you forgot your password?</Typography>
+          <Link to="/resetPassword">Reset password</Link>
         </Box>
-      </Box>
-    </Box>
+      </Form>
+    </Container>
   );
 };
 

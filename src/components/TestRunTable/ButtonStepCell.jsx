@@ -22,7 +22,7 @@ import {
   Typography
 } from '@mui/material';
 
-import { executeTest, postBug, getPossibleBugValues, postImage } from '../../redux/store';
+import { executeTest, createBug, getBugOptions, uploadImage } from '../../redux/store';
 
 export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
   const dispatch = useDispatch();
@@ -36,7 +36,7 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   useEffect(() => {
-    dispatch(getPossibleBugValues());
+    dispatch(getBugOptions());
   }, []);
 
   const handleNextStep = () => {
@@ -61,7 +61,7 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
       reportDate: DateTime.now().toISO().substring(0, 19)
     };
 
-    dispatch(postBug({ json: newErrorData }))
+    dispatch(createBug({ json: newErrorData }))
       .unwrap()
       .then((newBugId) => {
         acceptedFiles.forEach((file) => {
@@ -69,7 +69,7 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
           reader.onload = async () => {
             const regex = new RegExp(/(data:\w+\/\w+;base64,)(.+)/gm);
             dispatch(
-              postImage({
+              uploadImage({
                 base64image: regex.exec(reader.result)[2],
                 imageName: file.name.split('.')[0],
                 errorId: newBugId

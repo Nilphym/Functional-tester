@@ -1,8 +1,8 @@
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 
-import authService from './auth';
-import { TOKEN_KEY } from '../config';
+import authService from '../auth';
+import { TOKEN_KEY } from '../../config';
 
 jest.mock('axios');
 

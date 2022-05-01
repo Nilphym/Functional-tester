@@ -5,8 +5,8 @@ import authService from '../../services/auth';
 
 const successMessages = {
   registerProject: 'Project registered successfully',
-  inviteUser: 'User invited successfully',
-  registerUser: 'User registered successfully',
+  invite: 'User invited successfully',
+  register: 'User registered successfully',
   forgotPassword: 'Password reset link has been sent to your e-mail account',
   changeUserPassword: 'Password updated successfully',
   deleteUser: 'User deleted successfully'
@@ -51,7 +51,7 @@ export const registerProject = createAsyncThunk(
   }
 );
 
-export const inviteUser = createAsyncThunk('auth/invite', async ({ email, role }, { getState }) => {
+export const invite = createAsyncThunk('auth/invite', async ({ email, role }, { getState }) => {
   const user = authService.inviteUser({
     projectId: getState().auth.token.projectId,
     email,
@@ -60,8 +60,8 @@ export const inviteUser = createAsyncThunk('auth/invite', async ({ email, role }
   return user;
 });
 
-export const registerUser = createAsyncThunk(
-  'auth/registerUser',
+export const register = createAsyncThunk(
+  'auth/register',
   async ({ projectId, name, surname, email, password, role }) => {
     const user = authService.registerUser({
       projectId,
@@ -145,17 +145,17 @@ export const authSlice = createSlice({
         toast.error(action.error.message);
       })
 
-      .addCase(inviteUser.fulfilled, () => {
-        toast.success(successMessages.inviteUser);
+      .addCase(invite.fulfilled, () => {
+        toast.success(successMessages.invite);
       })
-      .addCase(inviteUser.rejected, (_, action) => {
+      .addCase(invite.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
-      .addCase(registerUser.fulfilled, () => {
-        toast.success(successMessages.registerUser);
+      .addCase(register.fulfilled, () => {
+        toast.success(successMessages.register);
       })
-      .addCase(registerUser.rejected, (_, action) => {
+      .addCase(register.rejected, (_, action) => {
         toast.error(action.error.message);
       })
 
@@ -173,7 +173,8 @@ export const authSlice = createSlice({
         toast.error(action.error.message);
       })
 
-      .addCase(deleteUser.fulfilled, () => {
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.users = state.users.filter((user) => user.id !== action.payload.id);
         toast.success(successMessages.deleteUser);
       })
       .addCase(deleteUser.rejected, (_, action) => {

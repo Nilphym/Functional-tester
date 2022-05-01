@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Typography, Menu, MenuItem, Button } from '@mui/material';
 import { blue, grey } from '@mui/material/colors';
 
-const NavMultiLink = ({ name, icon, links, compact }) => {
+export const NavMultiLink = ({ name, icon, links, compact }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -65,8 +65,6 @@ const NavMultiLink = ({ name, icon, links, compact }) => {
     </>
   );
 };
-
-export default NavMultiLink;
 
 NavMultiLink.propTypes = {
   name: PropTypes.string.isRequired,

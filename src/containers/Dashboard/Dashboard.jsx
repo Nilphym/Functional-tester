@@ -6,7 +6,7 @@ import { Statistic, PieChart, PercentageChart, DoughnutChart } from '../../compo
 import { getRaport } from '../../redux/store';
 
 export const Dashboard = () => {
-  const { loading, data: raportData } = useSelector((state) => state.raports);
+  const { loading, raport } = useSelector((state) => state.raports);
   const smallMedia = useMediaQuery('(max-width: 1100px)');
   const dispatch = useDispatch();
 
@@ -27,40 +27,40 @@ export const Dashboard = () => {
         justifyContent: 'center'
       }}
     >
-      <Statistic name="Days from product start" number={raportData.daysFromStart} icon="time" />
-      <Statistic name="Testers" number={raportData.testersNumber} icon="person" />
-      <Statistic name="Developers" number={raportData.devsNumber} icon="person" />
+      <Statistic name="Days from product start" number={raport.daysFromStart} icon="time" />
+      <Statistic name="Testers" number={raport.testers} icon="person" />
+      <Statistic name="Developers" number={raport.devs} icon="person" />
       <PieChart
         sx={{ gridRow: 'span 2' }}
         name="Bugs by impact"
         label="Total bugs"
-        data={raportData.bugsByImpact}
+        data={raport.bugsByImpact}
       />
       <PieChart
         sx={{ gridRow: 'span 2' }}
         name="Bugs by priority"
         label="Total bugs"
-        data={raportData.bugsByPriority}
+        data={raport.bugsByPriority}
       />
-      <Statistic name="Test suites" number={raportData.testSuitesNumber} icon="test" />
+      <Statistic name="Test suites" number={raport.testSuites} icon="test" />
       <Statistic
         sx={smallMedia ? { gridRow: 7, gridColumn: 2 } : {}}
         name="Rejected bugs"
-        number={raportData.bugsRejected}
+        number={raport.bugsRejected}
         icon="bug"
       />
       <DoughnutChart
         sx={{ gridColumn: 'span 2', gridRow: 'span 2' }}
         name="Test suites"
         label="Tests"
-        data={raportData.testSuitesByName}
+        data={raport.testSuitesByName}
       />
       <PercentageChart
         sx={{ gridRow: 'span 2' }}
         name="Bugs closed"
         completedLabel="Closed"
-        all={raportData.bugsAll}
-        completed={raportData.bugsFixed}
+        all={raport.bugsAll}
+        completed={raport.bugsFixed}
       />
     </Box>
   );

@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import React from 'react';
-import { registerUserToProject } from '../../redux/store';
+import { register } from '../../redux/store';
 import logo from '../../assets/logo/logo2.png';
 
 const Logo = styled('img')({
@@ -63,7 +63,7 @@ export const RegisterToProjectPanel = () => {
 
   async function onSubmit({ name, surname, password }) {
     const username = await dispatch(
-      registerUserToProject({ name, surname, password, role, productIdEncoded, emailEncoded })
+      register({ name, surname, password, role, productIdEncoded, emailEncoded })
     );
     reset(defaultValues, {
       keepIsValid: true

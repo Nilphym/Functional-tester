@@ -7,29 +7,29 @@ export const bugTypes = {
 };
 
 export const bugStates = {
-  rejected: 'reject',
-  resolved: 'resolve',
-  taken: 'take',
-  resigned: 'resign'
+  rejected: 'Rejected',
+  resolved: 'Resolved',
+  taken: 'Open',
+  resigned: 'New'
 };
 
 const bugService = {
   async getOptions() {
     const resolved = await Promise.all([
-      server.get({ url: 'bugs/types' }),
       server.get({ url: 'bugs/impacts' }),
-      server.get({ url: 'bugs/priorities' })
+      server.get({ url: 'bugs/priorities' }),
+      server.get({ url: 'bugs/types' })
     ]);
 
     return {
-      types: resolved[0],
-      impacts: resolved[1],
-      priorities: resolved[2]
+      impacts: resolved[0],
+      priorities: resolved[1],
+      types: resolved[2]
     };
   },
 
   async getBugs({ type }) {
-    const url = type ? `bugs/${bugTypes[type]}` : 'bugs';
+    const url = type ? `bugs/${type}` : 'bugs';
     const bugs = await server.get({ url });
     return bugs;
   },
@@ -44,8 +44,8 @@ const bugService = {
     return bug;
   },
 
-  async putBug({ id, data }) {
-    const bug = await server.put({ url: `bugs/${id}`, data });
+  async putBug({ data }) {
+    const bug = await server.put({ url: `bugs/${data.id}`, data });
     return bug;
   },
 
@@ -63,11 +63,11 @@ const bugService = {
 
   async postAttachment({ bugId, imageBase64, imageName }) {
     const url = await server.postImage({ imageBase64, imageName });
-    const id = await server.post({
+    const attachment = await server.post({
       url: 'attachments',
       data: { url, bugId }
     });
-    return { id, url };
+    return attachment;
   }
 };
 

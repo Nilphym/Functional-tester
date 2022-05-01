@@ -1,5 +1,5 @@
-import server from './server';
-import { TOKEN_KEY } from '../config';
+import server from '../server';
+import { TOKEN_KEY } from '../../config';
 
 jest.mock('axios');
 

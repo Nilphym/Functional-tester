@@ -17,9 +17,9 @@ import { styled, useTheme } from '@mui/system';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-import NavProfile from './NavProfile';
-import NavLink from './NavLink';
-import NavMultiLink from './NavMultiLink';
+import { NavProfile } from './NavProfile';
+import { NavLink } from './NavLink';
+import { NavMultiLink } from './NavMultiLink';
 import logo from '../../assets/logo/logo2.png';
 import logoIcon from '../../assets/logo/icon.png';
 
@@ -179,8 +179,6 @@ export const Navbar = ({ links }) => {
     </>
   );
 };
-
-export default Navbar;
 
 Navbar.propTypes = {
   links: PropTypes.array.isRequired

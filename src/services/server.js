@@ -39,10 +39,10 @@ const server = {
     return fetchedData;
   },
 
-  async postImage({ imageBase64, name }) {
+  async postImage({ imageBase64, imageName }) {
     const formData = new FormData();
     formData.append('image', imageBase64);
-    formData.append('name', name);
+    formData.append('name', imageName);
 
     const {
       data: {
@@ -50,11 +50,9 @@ const server = {
           image: { url }
         }
       }
-    } = await axios.post(
-      IMAGE_API_URL,
-      formData,
-      createConfig({ 'Content-Type': 'multipart/form-data' })
-    );
+    } = await axios.post(IMAGE_API_URL, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
 
     return url;
   }

@@ -16,7 +16,7 @@ const authService = {
   },
 
   async login({ email, password }) {
-    const token = await server.post({ url: 'users/login', data: { email, password } });
+    const { token } = await server.post({ url: 'users/login', data: { email, password } });
     localStorage.setItem(TOKEN_KEY, token);
     return jwtDecode(token);
   },

@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import React from 'react';
 
-import { inviteUser } from '../../redux/store';
+import { invite } from '../../redux/store';
 
 const roles = ['Project Manager', 'Developer', 'Tester'];
 
@@ -36,7 +36,7 @@ export const InviteUserToProjectPanel = () => {
   });
 
   const onSubmit = ({ email, role }) => {
-    dispatch(inviteUser({ email, role }));
+    dispatch(invite({ email, role }));
     reset(defaultValues, {
       keepIsValid: true
     });

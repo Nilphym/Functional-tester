@@ -7,7 +7,7 @@ import { Delete } from '@mui/icons-material';
 import Carousel from '@brainhubeu/react-carousel';
 import '@brainhubeu/react-carousel/lib/style.css';
 
-import { deleteBugAttachment } from '../../redux/store';
+import { deleteAttachment } from '../../redux/store';
 
 const Image = styled('img')({
   maxWidth: '100%'
@@ -18,7 +18,7 @@ export const ImageCarousel = ({ closeCarousel, bugId, images, startingPosition }
   const dispatch = useDispatch();
 
   const handleDeleteIcon = () => {
-    dispatch(deleteBugAttachment({ bugId, id: images[position].id }));
+    dispatch(deleteAttachment({ id: images[position].id, bugId }));
     closeCarousel();
   };
 
@@ -27,8 +27,8 @@ export const ImageCarousel = ({ closeCarousel, bugId, images, startingPosition }
       <Carousel
         value={position}
         onChange={setPosition}
-        slides={images.map(({ image }) => (
-          <Image src={image} alt="" />
+        slides={images.map(({ url }) => (
+          <Image src={url} alt="" />
         ))}
         plugins={['arrows', 'clickToChange']}
       />

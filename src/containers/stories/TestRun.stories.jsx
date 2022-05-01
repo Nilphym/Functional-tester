@@ -1,6 +1,6 @@
 import React from 'react';
 
-import TestRun from './TestRun';
+import TestRun from '../TestRun/TestRun';
 
 export default {
   title: 'Nilphym/Test Run',
