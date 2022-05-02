@@ -19,8 +19,8 @@ App delivers 404 page, error page (built with React Error Boundary), spinners fo
 
 
 ## Screenshots
-![Dashboard](readme/screenshot1.png)
-![Bugs](readme/screenshot2.png)
+![Dashboard](readme/Screenshot1.png)
+![Bugs](readme/Screenshot2.png)
 
 
 ## Technologies and methodologies
