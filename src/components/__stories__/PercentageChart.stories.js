@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PercentageChart from './PercentageChart';
+import PercentageChart from '../PercentageChart/PercentageChart';
 
 export default {
   title: 'Nilphym/PercentageChart',

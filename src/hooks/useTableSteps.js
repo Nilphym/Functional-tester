@@ -55,7 +55,7 @@ const useTableSteps = (stepsCount) => {
     dispatch({ type: actionTypes.done, payload: id });
   };
 
-  const errorAction = (id) => {
+  const bugAction = (id) => {
     dispatch({ type: actionTypes.error, payload: id });
   };
 
@@ -63,7 +63,7 @@ const useTableSteps = (stepsCount) => {
     dispatch({ type: actionTypes.clear, payload: id });
   };
 
-  return { currentState, stepStates, doneAction, errorAction, clearAction };
+  return { currentState, stepStates, doneAction, bugAction, clearAction };
 };
 
 export default useTableSteps;

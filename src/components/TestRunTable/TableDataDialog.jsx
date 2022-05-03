@@ -14,23 +14,23 @@ import {
   TableContainer
 } from '@mui/material';
 
-export const TableDataDialog = ({ handleClose, open, data, chosenDataItem, handleShow }) => {
+export const TableDataDialog = ({ open, data, chosenItem, handleShow, handleClose }) => {
   return (
     <>
-      {data.map((dataItem) => (
+      {data.map((item) => (
         <Button
-          onClick={() => handleShow(dataItem)}
-          key={dataItem.code}
+          onClick={() => handleShow(item)}
+          key={item.code}
           color="primary"
           sx={{ whiteSpace: 'nowrap' }}
         >
-          {dataItem.code}
+          {item.code}
         </Button>
       ))}
-      {chosenDataItem && (
+      {chosenItem && (
         <Dialog fullWidth open={open} onClose={handleClose}>
-          <DialogTitle>{chosenDataItem.name}</DialogTitle>
-          {chosenDataItem.table && (
+          <DialogTitle>{chosenItem.name}</DialogTitle>
+          {chosenItem.table && (
             <DialogContent>
               <TableContainer
                 sx={{ border: '1px solid rgba(224, 224, 224, 1)', borderRadius: '4px' }}
@@ -38,13 +38,13 @@ export const TableDataDialog = ({ handleClose, open, data, chosenDataItem, handl
                 <Table>
                   <TableHead>
                     <TableRow>
-                      {chosenDataItem.table[0].map((heading) => (
+                      {chosenItem.table[0].map((heading) => (
                         <TableCell key={heading}>{heading}</TableCell>
                       ))}
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {chosenDataItem.table.slice(1).map((row) => (
+                    {chosenItem.table.slice(1).map((row) => (
                       <TableRow key={row[0]}>
                         {row.map((value) => (
                           <TableCell key={value}>{value}</TableCell>
@@ -68,14 +68,14 @@ export const TableDataDialog = ({ handleClose, open, data, chosenDataItem, handl
 TableDataDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool,
-  chosenDataItem: PropTypes.object,
+  chosenItem: PropTypes.object,
   data: PropTypes.array,
   handleShow: PropTypes.func.isRequired
 };
 
 TableDataDialog.defaultProps = {
   open: false,
-  chosenDataItem: null,
+  chosenItem: null,
   data: []
 };
 

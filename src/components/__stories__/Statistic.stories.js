@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Statistic from './Statistic';
+import Statistic from '../Statistic/Statistic';
 
 export default {
   title: 'Nilphym/Statistic',

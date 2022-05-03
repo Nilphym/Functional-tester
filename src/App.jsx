@@ -6,13 +6,10 @@ import { RequireAuth } from './providers';
 import { Logout } from './containers';
 import {
   LoginPanel,
-  TestPlan,
-  Test,
   RegisterPanel,
   ResetPasswordPanel,
   ForgotPasswordPanel,
   RegisterToProjectPanel,
-  TestPlansView,
   InviteUserToProjectPanel,
   WelcomeUserToProjectPanel
 } from './components';
@@ -23,7 +20,9 @@ import {
   AllBugsPage,
   TestRunPage,
   RetestBugsPage,
-  DashboardPage
+  DashboardPage,
+  TestPlanPage,
+  TestPlanListPage
 } from './pages';
 import DeleteUserPanel from './components/DeleteUserPanel/DeleteUserPanel';
 
@@ -34,9 +33,9 @@ const App = () => {
         <Route path="login" element={<LoginPanel />} />
         <Route path="logout" element={<Logout />} />
         <Route path="register" element={<RegisterPanel />} />
-        <Route path="resetPassword" element={<ForgotPasswordPanel />} />
+        <Route path="reset_password" element={<ForgotPasswordPanel />} />
         <Route path="api/auth/:userId/:token" element={<ResetPasswordPanel />} />
-        <Route path="inviteUser" element={<InviteUserToProjectPanel />} />
+        <Route path="invite_user" element={<InviteUserToProjectPanel />} />
         <Route path="welcome/:username" element={<WelcomeUserToProjectPanel />} />
         <Route
           path="api/account/:role/:productIdEncoded/:emailEncoded"
@@ -44,17 +43,18 @@ const App = () => {
         />
         <Route element={<RequireAuth />}>
           <Route path="dashboard" element={<DashboardPage />} />
-          <Route path="bugs" element={<AllBugsPage />} />
-          <Route path="bugs/assigned" element={<AssignedBugsPage />} />
-          <Route path="bugs/active" element={<ActiveBugsPage />} />
-          <Route path="bugs/retest" element={<RetestBugsPage />} />
-          <Route path="test/execution" element={<TestRunPage />} />
-          <Route path="testPlans" element={<TestPlansView />} />
-          <Route path="testPlan-e-:testPlanId" element={<TestPlan isEditable />} />
-          <Route path="testPlan-:testPlanId" element={<TestPlan isEditable={false} />} />
-          <Route path="testPlan-:testPlanId/test-e-:testId" element={<Test isEditable />} />
-          <Route path="testPlan-:testPlanId/test-:testId" element={<Test isEditable={false} />} />
-          <Route path="deleteUser" element={<DeleteUserPanel />} />
+          <Route path="test_plans">
+            <Route index element={<TestPlanListPage />} />
+            <Route path=":id/:name" element={<TestPlanPage />} />
+          </Route>
+          <Route path="bugs">
+            <Route index element={<AllBugsPage />} />
+            <Route path="assigned" element={<AssignedBugsPage />} />
+            <Route path="active" element={<ActiveBugsPage />} />
+            <Route path="retest" element={<RetestBugsPage />} />
+          </Route>
+          <Route path="test_execution/:origin/:id" element={<TestRunPage />} />
+          <Route path="delete_user" element={<DeleteUserPanel />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

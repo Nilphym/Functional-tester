@@ -73,5 +73,5 @@ TestRunTable.propTypes = {
 export default TestRunTable;
 export * from './ButtonStepCell';
 export * from './TestDataCell';
-export * from './ErrorDataCell';
+export * from './BugDataCell';
 export * from './TableDataDialog';

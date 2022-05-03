@@ -6,10 +6,10 @@ import TableDataDialog from './TableDataDialog';
 
 export const TestDataCell = ({ data }) => {
   const [open, setOpen] = useState(false);
-  const [chosenDataItem, setChosenDataItem] = useState(null);
+  const [chosenItem, setChosenItem] = useState(null);
 
-  const handleTestDataShow = (dataItem) => {
-    setChosenDataItem(dataItem);
+  const handleTestDataShow = (item) => {
+    setChosenItem(item);
     setOpen(true);
   };
 
@@ -22,12 +22,11 @@ export const TestDataCell = ({ data }) => {
       }}
     >
       <TableDataDialog
-        data={data}
-        chosenDataItem={chosenDataItem}
-        handleShow={handleTestDataShow}
         open={open}
+        data={data.map((item) => ({ ...item, code: item.name }))}
+        chosenItem={chosenItem}
+        handleShow={handleTestDataShow}
         handleClose={() => setOpen(false)}
-        content={chosenDataItem}
       />
     </Box>
   );

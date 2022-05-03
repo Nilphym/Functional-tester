@@ -3,9 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter, useLocation, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
-import store from '../../../redux/store';
-import AuthManager from '../AuthManager';
-import RequireAuth from '../RequireAuth';
+import store from '../../redux/store';
+import AuthManager from '../AuthManager/AuthManager';
+import RequireAuth from '../AuthManager/RequireAuth';
 
 describe('RequireAuth', () => {
   it('should redirect to login page when token is expired', () => {

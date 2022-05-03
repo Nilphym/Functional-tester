@@ -68,6 +68,11 @@ const bugService = {
       data: { url, bugId }
     });
     return attachment;
+  },
+
+  async evaluateBug({ bugId, result }) {
+    const bug = await server.put({ url: `bugs/evaluate/${bugId}`, data: { result } });
+    return bug;
   }
 };
 

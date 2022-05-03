@@ -1,6 +1,6 @@
 import React from 'react';
 
-import DoughnutChart from './DoughnutChart';
+import DoughnutChart from '../DoughnutChart/DoughnutChart';
 
 export default {
   title: 'Nilphym/DoughnutChart',

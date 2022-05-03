@@ -4,17 +4,7 @@ import { Box, Typography, Paper } from '@mui/material';
 import { lightGreen } from '@mui/material/colors';
 import { PieChart as PieChartRecharts, Pie, Cell, ResponsiveContainer } from 'recharts';
 
-const COLORS = [
-  lightGreen[100],
-  lightGreen[200],
-  lightGreen[300],
-  lightGreen[400],
-  lightGreen[500],
-  lightGreen[600],
-  lightGreen[700],
-  lightGreen[800],
-  lightGreen[900]
-];
+const COLORS = [lightGreen[300], lightGreen[200], lightGreen[100]];
 
 const RADIAN = Math.PI / 180;
 const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {

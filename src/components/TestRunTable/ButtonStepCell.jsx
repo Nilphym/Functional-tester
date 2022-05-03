@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
@@ -22,22 +22,17 @@ import {
   Typography
 } from '@mui/material';
 
-import { executeTest, createBug, getBugOptions, uploadImage } from '../../redux/store';
+import { executeTest, createBug, uploadImage } from '../../redux/store';
 
 export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth.token.userId);
-  const { types, impacts, priorities } = useSelector((state) => state.bugs.possibleValues);
+  const { types, impacts, priorities } = useSelector((state) => state.bugs.options);
   const { handleSubmit, setValue, control } = useForm();
-  const { currentState, stepStates, doneAction, errorAction, clearAction } = useTableStepsRef;
+  const { currentState, stepStates, doneAction, bugAction, clearAction } = useTableStepsRef;
   const [openExecutionDialog, setOpenExecutionDialog] = useState(false);
   const [openErrorDialog, setOpenErrorDialog] = useState(false);
   const lastStepNumber = Object.keys(currentState).length - 1;
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
-
-  useEffect(() => {
-    dispatch(getBugOptions());
-  }, []);
 
   const handleNextStep = () => {
     if (index !== lastStepNumber) {
@@ -47,43 +42,41 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
     }
   };
 
-  const onSubmitNewError = ({ name, description, deadline, impact, priority, type }) => {
-    const newErrorData = {
-      testId,
+  const onSubmitNewError = ({ name, description, impact, priority, type, deadline }) => {
+    const newBugData = {
       stepId,
-      testerId: userId,
       name,
       description,
       deadline: DateTime.fromFormat(deadline, 'MM/dd/yyyy').toISO().substring(0, 19),
-      errorImpact: impact,
-      errorPriority: priority,
-      errorType: type,
+      impact,
+      priority,
+      type,
       reportDate: DateTime.now().toISO().substring(0, 19)
     };
 
-    dispatch(createBug({ json: newErrorData }))
+    dispatch(createBug({ data: newBugData }))
       .unwrap()
-      .then((newBugId) => {
+      .then((newBug) => {
         acceptedFiles.forEach((file) => {
           const reader = new FileReader();
           reader.onload = async () => {
             const regex = new RegExp(/(data:\w+\/\w+;base64,)(.+)/gm);
             dispatch(
               uploadImage({
-                base64image: regex.exec(reader.result)[2],
-                imageName: file.name.split('.')[0],
-                errorId: newBugId
+                bugId: newBug.id,
+                imageBase64: regex.exec(reader.result)[2],
+                imageName: file.name.split('.')[0]
               })
             );
           };
           reader.readAsDataURL(file);
         });
       });
-    errorAction(index);
+    bugAction(index);
   };
 
   const handleTestExecution = () => {
-    dispatch(executeTest({ testId }));
+    dispatch(executeTest({ id: testId }));
     doneAction(index);
   };
 
@@ -168,18 +161,13 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
                   )}
                 />
                 <FormControl size="small">
-                  <InputLabel id="errorImpact">Error impact</InputLabel>
+                  <InputLabel id="impact">Impact</InputLabel>
                   <Controller
                     control={control}
-                    name="errorImpact"
+                    name="impact"
                     defaultValue=""
                     render={({ field }) => (
-                      <Select
-                        labelId="errorImpact"
-                        id="errorImpact"
-                        label="Error impact"
-                        {...field}
-                      >
+                      <Select labelId="impact" id="impact" label="Impact" {...field}>
                         {impacts.map((value) => (
                           <MenuItem key={value} value={value}>
                             {value}
@@ -190,18 +178,13 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
                   />
                 </FormControl>
                 <FormControl size="small">
-                  <InputLabel id="errorPriority">Error priority</InputLabel>
+                  <InputLabel id="priority">Priority</InputLabel>
                   <Controller
                     control={control}
-                    name="errorPriority"
+                    name="priority"
                     defaultValue=""
                     render={({ field }) => (
-                      <Select
-                        labelId="errorPriority"
-                        id="errorPriority"
-                        label="Error priority"
-                        {...field}
-                      >
+                      <Select labelId="priority" id="priority" label="Priority" {...field}>
                         {priorities.map((value) => (
                           <MenuItem key={value} value={value}>
                             {value}
@@ -212,13 +195,13 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
                   />
                 </FormControl>
                 <FormControl size="small">
-                  <InputLabel id="errorType">Error type</InputLabel>
+                  <InputLabel id="type">Type</InputLabel>
                   <Controller
                     control={control}
-                    name="errorType"
+                    name="type"
                     defaultValue=""
                     render={({ field }) => (
-                      <Select labelId="errorType" id="errorType" label="Error type" {...field}>
+                      <Select labelId="type" id="type" label="Type" {...field}>
                         {types.map((value) => (
                           <MenuItem key={value} value={value}>
                             {value}

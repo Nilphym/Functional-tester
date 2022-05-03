@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { CircularProgress, Box, Paper, Typography } from '@mui/material';
 
 import {
   TestRunTable,
   ButtonStepCell,
-  ErrorDataCell,
+  BugDataCell,
   TestDataCell,
   TableDataDialog
 } from '../../components';
 import useTableSteps from '../../hooks/useTableSteps';
-import { getExecutionTest, getExecutionTestFromErrorId } from '../../redux/store';
+import { getBugOptions, getTest } from '../../redux/store';
 
-const TestRunOrigin = ({ test }) => {
-  const { steps } = test;
+const TestRunMain = ({ id, steps }) => {
   const useTableStepsRef = useTableSteps(steps.length);
 
   /* eslint-disable react/prop-types */
@@ -30,7 +29,7 @@ const TestRunOrigin = ({ test }) => {
           <ButtonStepCell
             index={row.index}
             stepId={row.original.id}
-            testId={test.testId}
+            testId={id}
             useTableStepsRef={useTableStepsRef}
           />
         )
@@ -42,12 +41,12 @@ const TestRunOrigin = ({ test }) => {
         maxWidth: 100
       },
       {
-        Header: 'Associated errors',
-        accessor: 'errors',
+        Header: 'Associated bugs',
+        accessor: 'bugs',
         minWidth: 65,
         maxWidth: 65,
         align: 'center',
-        Cell: ({ row }) => <ErrorDataCell errors={row.values.errors} />
+        Cell: ({ row }) => <BugDataCell bugs={row.values.bugs} />
       },
       {
         Header: 'Test data',
@@ -71,16 +70,24 @@ const TestRunOrigin = ({ test }) => {
   return <TestRunTable columns={columns} data={steps} />;
 };
 
-TestRunOrigin.propTypes = {
-  test: PropTypes.object.isRequired
+TestRunMain.propTypes = {
+  id: PropTypes.string.isRequired,
+  steps: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      bugs: PropTypes.array.isRequired,
+      testData: PropTypes.array.isRequired,
+      controlPoint: PropTypes.string.isRequired
+    })
+  ).isRequired
 };
 
 const EntryData = ({ entryData }) => {
   const [open, setOpen] = useState(false);
-  const [chosenDataItem, setChosenDataItem] = useState(null);
+  const [chosenItem, setChosenItem] = useState(null);
 
   const handleDataShow = (dataItem) => {
-    setChosenDataItem(dataItem);
+    setChosenItem(dataItem);
     setOpen(true);
   };
 
@@ -97,8 +104,8 @@ const EntryData = ({ entryData }) => {
         <TableDataDialog
           handleClose={() => setOpen(false)}
           open={open}
-          data={entryData}
-          chosenDataItem={chosenDataItem}
+          data={entryData.map((item) => ({ ...item, code: item.name }))}
+          chosenItem={chosenItem}
           handleShow={handleDataShow}
         />
       </Box>
@@ -137,24 +144,20 @@ ExpectedResult.propTypes = {
 };
 
 export const TestRun = () => {
+  const { origin, id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { test, loading, pendingTestId, pendingErrorId } = useSelector(
-    (state) => state.testExecution
-  );
+  const { test, loadingTest: loading } = useSelector((state) => state.tests);
 
   useEffect(() => {
-    if (pendingTestId) {
-      (async () => {
-        await dispatch(getExecutionTest({ testId: pendingTestId }));
-      })();
-    } else if (pendingErrorId) {
-      (async () => {
-        await dispatch(getExecutionTestFromErrorId({ errorId: pendingErrorId }));
-      })();
+    if (origin === 'test') {
+      dispatch(getTest({ testId: id }));
+    } else if (origin === 'bug') {
+      dispatch(getTest({ bugId: id }));
     } else {
       navigate('/dashboard');
     }
+    dispatch(getBugOptions());
   }, []);
 
   return loading ? (
@@ -175,9 +178,9 @@ export const TestRun = () => {
         gap: '1rem'
       }}
     >
-      <Preconditions preconditions={test.testCaseProconditions} />
-      <EntryData entryData={test.testCaseEntryData} />
-      <TestRunOrigin test={test} />
+      <Preconditions preconditions={test.preconditions} />
+      <EntryData entryData={test.entryData} />
+      <TestRunMain id={test.id} steps={test.steps} />
       <ExpectedResult result={test.result} />
     </Box>
   );

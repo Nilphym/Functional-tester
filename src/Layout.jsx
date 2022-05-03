@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Navbar } from './containers';
 
-const unsecuredPaths = ['/login', '/resetPassword', '/register'];
+const unsecuredPaths = ['/login', '/reset_password', '/register'];
 
 const Layout = () => {
   const { token } = useSelector((state) => state.auth);
@@ -36,7 +36,7 @@ const Layout = () => {
     case 'Tester':
       links.push(
         ...[
-          { icon: 'tests', text: 'Test plans', destination: '/testPlans' },
+          { icon: 'tests', text: 'Test plans', destination: '/test_plans' },
           {
             icon: 'bugs',
             name: 'Bugs',
@@ -68,10 +68,10 @@ const Layout = () => {
     case 'ProjectManager':
       links.push(
         ...[
-          { icon: 'tests', text: 'Test plans', destination: '/testPlans' },
+          { icon: 'tests', text: 'Test plans', destination: '/test_plans' },
           { icon: 'bugs', text: 'Bugs', destination: '/bugs' },
-          { icon: 'addUser', text: 'Invite user', destination: '/inviteUser' },
-          { icon: 'deleteUser', text: 'Delete user', destination: '/deleteUser' },
+          { icon: 'addUser', text: 'Invite user', destination: '/invite_user' },
+          { icon: 'deleteUser', text: 'Delete user', destination: '/delete_user' },
           { icon: 'logout', text: 'Logout', destination: '/logout' }
         ]
       );

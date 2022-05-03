@@ -3,10 +3,6 @@ import { belongsTo, createServer, Factory, hasMany, Model, RestSerializer } from
 import { faker } from '@faker-js/faker';
 import jwt from 'jsonwebtoken';
 
-// import tests from './data/tests';
-// import bugs from './data/bugs';
-// import raports from './data/raports';
-// import testExecution from './data/testExecution';
 import { DateTime } from 'luxon';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -36,21 +32,8 @@ const roles = {
 };
 const defaultPassword = 'Password123!';
 
-// const features = [tests, bugs, raports, testExecution];
-
-// const makeModels = () => Object.assign(...features.map((feature) => feature.models));
-
-// const makeRoutes = (thisRef) => ({
-//   ...features.map((feature) => feature.routes.map((route) => route(thisRef)))
-// });
-
-// const makeSeeds = (serverRef) => ({
-//   ...features.map((feature) => feature.seeds.map((route) => route(serverRef)))
-// });
-
 const makeServer = () =>
   createServer({
-    // models: makeModels(),
     identityManagers: {
       application: UUIDManager
     },
@@ -59,32 +42,70 @@ const makeServer = () =>
         bugs: hasMany(),
         users: hasMany()
       }),
+      user: Model.extend({
+        project: belongsTo(),
+        bugs: hasMany()
+      }),
+      testPlan: Model.extend({
+        project: belongsTo(),
+        testCategories: hasMany()
+      }),
+      testCategory: Model.extend({
+        testPlan: belongsTo(),
+        tests: hasMany(),
+        project: belongsTo()
+      }),
+      test: Model.extend({
+        testCategory: belongsTo(),
+        steps: hasMany()
+      }),
+      step: Model.extend({
+        test: belongsTo(),
+        bugs: hasMany()
+      }),
       bug: Model.extend({
+        step: belongsTo(),
         project: belongsTo(),
         attachments: hasMany(),
         developer: belongsTo('user')
       }),
       attachment: Model.extend({
         bug: belongsTo()
-      }),
-      user: Model.extend({
-        project: belongsTo(),
-        bugs: hasMany()
       })
     },
     serializers: {
-      bug: RestSerializer.extend({
+      project: RestSerializer.extend({
         root: false,
-        include: ['attachments', 'project', 'developer'],
+        include: ['bugs', 'users'],
         embed: true
       }),
       user: RestSerializer.extend({
         root: false,
         embed: true
       }),
-      project: RestSerializer.extend({
+      testPlan: RestSerializer.extend({
         root: false,
-        include: ['bugs', 'users'],
+        include: ['testCategories'],
+        embed: true
+      }),
+      testCategory: RestSerializer.extend({
+        root: false,
+        include: ['tests'],
+        embed: true
+      }),
+      test: RestSerializer.extend({
+        root: false,
+        include: ['steps'],
+        embed: true
+      }),
+      step: RestSerializer.extend({
+        root: false,
+        include: ['bugs'],
+        embed: true
+      }),
+      bug: RestSerializer.extend({
+        root: false,
+        include: ['attachments', 'developer'],
         embed: true
       }),
       attachment: RestSerializer.extend({
@@ -117,7 +138,32 @@ const makeServer = () =>
         };
       });
 
-      // makeRoutes(this);
+      this.get('test_plans', (schema, request) => {
+        const { projectId } = decodeMirageJWT(request);
+        return schema.testPlans.where({ projectId });
+      });
+
+      this.get('test_plans/:id', (schema, request) => {
+        const { id } = request.params;
+        return schema.testPlans.find(id);
+      });
+
+      this.get('test/:id', (schema, request) => {
+        const { id } = request.params;
+        return schema.tests.find(id);
+      });
+
+      this.get('test/from_bug/:bugId', (schema, request) => {
+        const { bugId } = request.params;
+        const relatedBug = schema.bugs.find(bugId);
+        return relatedBug.step.test;
+      });
+
+      this.put('tests/:id/execute', (schema, request) => {
+        const { id } = request.params;
+        const test = schema.tests.find(id);
+        return schema.tests.find(id).update({ executions: test.executions + 1 });
+      });
 
       this.get('users', (schema) => {
         return schema.users.all();
@@ -164,8 +210,20 @@ const makeServer = () =>
       });
 
       this.post('bugs', (schema, request) => {
+        const { projectId } = decodeMirageJWT(request);
         const attrs = JSON.parse(request.requestBody);
-        return schema.bugs.create(attrs);
+        return schema.bugs.create({
+          ...attrs,
+          projectId,
+          retestsDone: 0,
+          retestsFailed: 0,
+          retestsRequired: 0,
+          code: `B-${faker.random.alphaNumeric(8).toUpperCase()}`,
+          endDate: null,
+          evaluatedBy: [],
+          developer: null,
+          state: states.new
+        });
       });
 
       this.put('bugs/:id', (schema, request) => {
@@ -201,15 +259,19 @@ const makeServer = () =>
         return relatedBug.update({ state, developerId: userId });
       });
 
-      this.put('bugs/execute/:id', (schema, request) => {
+      this.put('bugs/evaluate/:id', (schema, request) => {
         const { id } = request.params;
+        const { userId } = decodeMirageJWT(request);
         const attrs = JSON.parse(request.requestBody);
         const relatedBug = schema.bugs.find(id);
+
+        const wasEvaluated = relatedBug.evaluatedBy.includes(userId);
 
         relatedBug.update({
           state: states.retest,
           retestsDone: relatedBug.retestsDone + 1,
-          retestsFailed: attrs.outcome ? relatedBug.retestsFailed : relatedBug.retestsFailed + 1
+          retestsFailed: attrs.result ? relatedBug.retestsFailed : relatedBug.retestsFailed + 1,
+          evaluatedBy: wasEvaluated ? relatedBug.evaluatedBy : [...relatedBug.evaluatedBy, userId]
         });
 
         if (relatedBug.retestsRequired === relatedBug.retestsDone) {
@@ -252,7 +314,7 @@ const makeServer = () =>
           daysFromStart,
           testers: schema.users.where({ projectId, role: roles.tester }).length,
           devs: schema.users.where({ projectId, role: roles.developer }).length,
-          testSuites: 5, // TODO
+          testSuites: schema.testCategories.where({ projectId }).length,
           bugsAll: schema.bugs.where({ projectId }).length,
           bugsFixed: schema.bugs.where({ projectId, state: 'Fixed' }).length,
           bugsRejected: schema.bugs.where({ projectId, state: 'Rejected' }).length,
@@ -275,20 +337,20 @@ const makeServer = () =>
             },
             { name: 'Low', value: schema.bugs.where({ projectId, priority: 'Low' }).length }
           ],
-          testSuitesByName: [
-            { name: 'Logging', value: 5 }, // TODO
-            { name: 'Shop', value: 5 }, // TODO
-            { name: 'About', value: 5 } // TODO
-          ]
+          testSuitesByName: schema.testCategories
+            .where({ projectId })
+            .models.map((testCategory) => ({
+              name: testCategory.name,
+              value: testCategory.tests.length
+            }))
         };
       });
 
       this.passthrough('https://api.imgbb.com/**');
     },
     seeds(server) {
-      // makeSeeds(server);
-
       const project = server.create('project');
+
       const developer = server.create('user', {
         project,
         role: roles.developer,
@@ -296,8 +358,23 @@ const makeServer = () =>
       });
       server.create('user', { project, role: roles.tester, password: defaultPassword });
       server.create('user', { project, role: roles.projectManager, password: defaultPassword });
-      project.update({
-        bugs: server.createList('bug', 98, { developer })
+
+      const testPlans = server.createList('testPlan', 3, { project });
+
+      testPlans.forEach((testPlan) => {
+        const testCategories = server.createList('testCategory', 2, { project, testPlan });
+
+        testCategories.forEach((testCategory) => {
+          const tests = server.createList('test', 3, { testCategory });
+
+          tests.forEach((test) => {
+            const steps = server.createList('step', 3, { test });
+
+            steps.forEach((step) => {
+              server.createList('bug', getRandomInt(0, 2), { project, step, developer });
+            });
+          });
+        });
       });
     },
     factories: {
@@ -307,6 +384,72 @@ const makeServer = () =>
         },
         createdAt() {
           return faker.date.recent(30);
+        }
+      }),
+      testPlan: Factory.extend({
+        name() {
+          return faker.company.catchPhrase();
+        }
+      }),
+      testCategory: Factory.extend({
+        name() {
+          return faker.company.catchPhrase();
+        }
+      }),
+      test: Factory.extend({
+        name() {
+          return faker.company.catchPhrase();
+        },
+        preconditions() {
+          return faker.lorem.sentences(1);
+        },
+        entryData() {
+          const count = getRandomInt(1, 4);
+          const entryData = Array(count).fill(null);
+
+          return entryData.map(() => {
+            const width = getRandomInt(2, 5);
+            const height = getRandomInt(2, 5);
+            const emptyTable = Array(height)
+              .fill(null)
+              .map(() => Array(width).fill(0));
+            return {
+              name: faker.commerce.department(),
+              table: emptyTable.map((row, index) =>
+                row.map(() => (index === 0 ? faker.database.column() : faker.lorem.word()))
+              )
+            };
+          });
+        },
+        result() {
+          return faker.lorem.sentences(1);
+        },
+        executions: 0
+      }),
+      step: Factory.extend({
+        name() {
+          return faker.git.commitMessage();
+        },
+        testData() {
+          const count = getRandomInt(0, 2);
+          const testData = Array(count).fill(null);
+
+          return testData.map(() => {
+            const width = getRandomInt(2, 5);
+            const height = getRandomInt(2, 5);
+            const emptyTable = Array(height)
+              .fill(null)
+              .map(() => Array(width).fill(0));
+            return {
+              name: faker.commerce.department(),
+              table: emptyTable.map((row, index) =>
+                row.map(() => (index === 0 ? faker.database.column() : faker.lorem.word()))
+              )
+            };
+          });
+        },
+        controlPoint() {
+          return faker.lorem.sentences(1);
         }
       }),
       bug: Factory.extend({
@@ -346,7 +489,7 @@ const makeServer = () =>
         endDate() {
           return getRandomInt(0, 5) === 0 ? faker.date.between() : null;
         },
-        executed: false, // TODO
+        evaluatedBy: [],
         afterCreate(bug, server) {
           bug.update({
             attachments: server.createList('attachment', getRandomInt(1, 4))

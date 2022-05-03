@@ -1,70 +1,47 @@
-# Getting Started with Create React App
+# Functional Tester
+Business app which lets you keep your manual tests and related bugs in one place along with executing step by step test cases. Created with React.  
+[View Demo](https://fun-testing.herokuapp.com/)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Table of content
+* [General info](#general-info)
+* [Screenshots](#screenshots)
+* [Technologies and methodologies](#technologies-and-methodologies)
+* [Setup](#setup)
+* [Contact](#contact)
 
-In the project directory, you can run:
 
-### `yarn start`
+## General info
+App works with mock server which delivers you logins and passwords to already created projects (also data will be randomized each time with Faker.js).  
+There are 3 roles: Developer, who works to resolve bugs; Tester, who works to run test cases and reports bugs and Project Manager, who invited and deletes users from project. Some routes are secured so you need to log in to enter them. Authorization uses JWT.  
+Logged user will be able to see dashboard with charts and statistics about current project.  
+App delivers 404 page, error page (built with React Error Boundary), spinners for asynchronous loading and notifications for actions for better UX.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Screenshots
+![Dashboard](readme/Screenshot1.png)
+![Bugs](readme/Screenshot2.png)
 
-### `yarn test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Technologies and methodologies
+* [React](https://reactjs.org)
+* [React Router](https://reactrouter.com)
+* [Redux](https://redux.js.org)
+* [Redux Toolkit](https://redux-toolkit.js.org/)
+* [Storybook](https://storybook.js.org)
+* [Material UI](https://mui.com)
+* [React Error Boundary](https://reactjs.org/docs/error-boundaries.html)
+* [Yup](https://github.com/jquense/yup)
+* [Faker.js](https://fakerjs.dev/)
+* [Prettier](https://prettier.io/)
+* [ESLint](https://eslint.org/)
+* [and more...](package.json)
 
-### `yarn build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Setup
+To view the website simply [click here](https://fun-testing.herokuapp.com/).  
+If you want to build the website on your own, clone the repo, use `yarn install` and `yarn start`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Contact
+Created by **Jędrzej Ratajczak** ([@nilphym](https://github.com/nilphym)) - feel free to contact me!
