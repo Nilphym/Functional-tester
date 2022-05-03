@@ -139,26 +139,28 @@ export const BugDataCell = ({ bugs }) => {
   return (
     <>
       <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        {bugs?.map((bug) => (
-          <Button
-            onClick={() => handleErrorShow(bug.id)}
-            key={bug.id}
-            color="error"
-            sx={{ whiteSpace: 'nowrap' }}
-          >
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: 'min-content 5.25rem',
-                justifyItems: 'left',
-                gap: '0.5rem'
-              }}
+        {bugs
+          ?.filter((bug) => bug.state === 'Fixed' || bug.state === 'Retest')
+          .map((bug) => (
+            <Button
+              onClick={() => handleErrorShow(bug.id)}
+              key={bug.id}
+              color="error"
+              sx={{ whiteSpace: 'nowrap' }}
             >
-              {bug.evaluatedBy.includes(userId) ? <CheckBox /> : <CheckBoxOutlineBlank />}
-              {bug.code}
-            </Box>
-          </Button>
-        ))}
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'min-content 5.25rem',
+                  justifyItems: 'left',
+                  gap: '0.5rem'
+                }}
+              >
+                {bug.evaluatedBy.includes(userId) ? <CheckBox /> : <CheckBoxOutlineBlank />}
+                {bug.code}
+              </Box>
+            </Button>
+          ))}
       </Box>
       <BugDetailsModal
         bugs={bugs}

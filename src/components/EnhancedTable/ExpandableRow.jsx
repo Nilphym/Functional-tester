@@ -58,7 +58,15 @@ const Field = ({ id, label, type, value, possibleValues }) => {
           disabled
         />
       ) : (
-        <TextField disabled size="small" id={id} label={label} value={value} />
+        <TextField
+          disabled
+          size="small"
+          id={id}
+          label={label}
+          value={`${value.slice(0, 10).split('-')[2]}/${value.split('-')[1]}/${
+            value.split('-')[0]
+          }`}
+        />
       );
     }
     case 'text':

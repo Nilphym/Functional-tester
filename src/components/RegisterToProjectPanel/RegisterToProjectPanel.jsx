@@ -68,7 +68,6 @@ export const RegisterToProjectPanel = () => {
     reset(defaultValues, {
       keepIsValid: true
     });
-    console.log(username);
     navigate(`/welcome/${username.payload}`);
   }
 

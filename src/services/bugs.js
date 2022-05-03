@@ -8,7 +8,7 @@ export const bugTypes = {
 
 export const bugStates = {
   rejected: 'Rejected',
-  resolved: 'Resolved',
+  resolved: 'Fixed',
   taken: 'Open',
   resigned: 'New'
 };

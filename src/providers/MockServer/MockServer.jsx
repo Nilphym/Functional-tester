@@ -22,14 +22,14 @@ const states = {
   rejected: 'Rejected',
   reopened: 'Reopened'
 };
-const impacts = ['Low', 'Medium', 'High'];
-const priorities = ['Low', 'Medium', 'High'];
-const types = ['Functional', 'Logic', 'Performance', 'Usability', 'Compatibility', 'Security'];
 const roles = {
   developer: 'Developer',
   tester: 'Tester',
   projectManager: 'ProjectManager'
 };
+const impacts = ['Low', 'Medium', 'High'];
+const priorities = ['Low', 'Medium', 'High'];
+const types = ['Functional', 'Logic', 'Performance', 'Usability', 'Compatibility', 'Security'];
 const defaultPassword = 'Password123!';
 
 const makeServer = () =>
@@ -219,7 +219,6 @@ const makeServer = () =>
           retestsFailed: 0,
           retestsRequired: 0,
           code: `B-${faker.random.alphaNumeric(8).toUpperCase()}`,
-          endDate: null,
           evaluatedBy: [],
           developer: null,
           state: states.new
@@ -485,9 +484,6 @@ const makeServer = () =>
         },
         reportDate() {
           return faker.date.recent(30);
-        },
-        endDate() {
-          return getRandomInt(0, 5) === 0 ? faker.date.between() : null;
         },
         evaluatedBy: [],
         afterCreate(bug, server) {
