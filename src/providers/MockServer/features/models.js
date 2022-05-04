@@ -3,7 +3,11 @@ import { belongsTo, hasMany, Model } from 'miragejs';
 export const models = {
   project: Model.extend({
     bugs: hasMany(),
-    users: hasMany()
+    users: hasMany(),
+    invitations: hasMany()
+  }),
+  invitation: Model.extend({
+    project: belongsTo()
   }),
   user: Model.extend({
     project: belongsTo(),

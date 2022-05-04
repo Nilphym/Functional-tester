@@ -134,13 +134,7 @@ export const LoginPage = () => {
           )}
         />
         <Link to="/register">Register a new product -&gt;</Link>
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            height: '3rem'
-          }}
-        >
+        <Button type="submit" variant="contained" sx={{ height: '3rem' }}>
           Login
         </Button>
         <Box>

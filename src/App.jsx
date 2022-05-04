@@ -4,13 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './Layout';
 import { RequireAuth } from './providers';
 import { Logout } from './containers';
-import {
-  ResetPasswordPanel,
-  ForgotPasswordPanel,
-  RegisterToProjectPanel,
-  InviteUserToProjectPanel,
-  WelcomeUserToProjectPanel
-} from './components';
+import { ResetPasswordPanel, ForgotPasswordPanel } from './components';
 import {
   LoginPage,
   NotFound,
@@ -23,7 +17,9 @@ import {
   TestPlanPage,
   TestPlanListPage,
   RegisterPage,
-  DeleteUserPage
+  DeleteUserPage,
+  InvitePage,
+  RegisterFromInvitationPage
 } from './pages';
 
 const App = () => {
@@ -31,29 +27,35 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
         <Route path="logout" element={<Logout />} />
-        <Route path="reset_password" element={<ForgotPasswordPanel />} />
-        <Route path="api/auth/:userId/:token" element={<ResetPasswordPanel />} />
-        <Route path="invite_user" element={<InviteUserToProjectPanel />} />
-        <Route path="welcome/:username" element={<WelcomeUserToProjectPanel />} />
-        <Route
-          path="api/account/:role/:productIdEncoded/:emailEncoded"
-          element={<RegisterToProjectPanel />}
-        />
+
+        <Route path="register">
+          <Route index element={<RegisterPage />} />
+          <Route path="user/:invitation" element={<RegisterFromInvitationPage />} />
+        </Route>
+
+        <Route path="reset_password">
+          <Route index element={<ForgotPasswordPanel />} />
+          <Route path=":userId/:token" element={<ResetPasswordPanel />} />
+        </Route>
+
         <Route element={<RequireAuth />}>
           <Route path="dashboard" element={<DashboardPage />} />
+
           <Route path="test_plans">
             <Route index element={<TestPlanListPage />} />
             <Route path=":id/:name" element={<TestPlanPage />} />
           </Route>
+          <Route path="test_execution/:origin/:id" element={<TestRunPage />} />
+
           <Route path="bugs">
             <Route index element={<AllBugsPage />} />
             <Route path="assigned" element={<AssignedBugsPage />} />
             <Route path="active" element={<ActiveBugsPage />} />
             <Route path="retest" element={<RetestBugsPage />} />
           </Route>
-          <Route path="test_execution/:origin/:id" element={<TestRunPage />} />
+
+          <Route path="invite_user" element={<InvitePage />} />
           <Route path="delete_user" element={<DeleteUserPage />} />
         </Route>
       </Route>

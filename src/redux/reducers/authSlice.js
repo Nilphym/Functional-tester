@@ -22,9 +22,19 @@ const initialState = {
 
 //* ****** GET REQUESTS ****** *//
 
-export const getUsers = createAsyncThunk('auth/get/all', async () => {
+export const getUsers = createAsyncThunk('auth/get/users', async () => {
   const users = await authService.getUsers();
   return users;
+});
+
+export const getProject = createAsyncThunk('auth/get/projects', async () => {
+  const users = await authService.getUsers();
+  return users;
+});
+
+export const getInvitation = createAsyncThunk('auth/get/invitation', async ({ id }) => {
+  const invitation = await authService.getInvitation({ id });
+  return invitation;
 });
 
 //* ****** POST REQUESTS ****** *//
@@ -51,23 +61,22 @@ export const registerProject = createAsyncThunk(
   }
 );
 
-export const invite = createAsyncThunk('auth/invite', async ({ email, role }, { getState }) => {
-  const user = authService.inviteUser({
-    projectId: getState().auth.token.projectId,
+export const invite = createAsyncThunk('auth/invite', async ({ email, role }) => {
+  const invitation = authService.invite({
     email,
     role
   });
-  return user;
+  return invitation;
 });
 
 export const register = createAsyncThunk(
   'auth/register',
-  async ({ projectId, name, surname, email, password, role }) => {
+  async ({ projectId, email, name, surname, password, role }) => {
     const user = authService.registerUser({
       projectId,
+      email,
       name,
       surname,
-      email,
       password,
       role
     });
@@ -178,6 +187,10 @@ export const authSlice = createSlice({
         toast.success(successMessages.deleteUser);
       })
       .addCase(deleteUser.rejected, (_, action) => {
+        toast.error(action.error.message);
+      })
+
+      .addCase(getInvitation.rejected, (_, action) => {
         toast.error(action.error.message);
       });
   }

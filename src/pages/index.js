@@ -8,3 +8,5 @@ export * from './TestPlanPage';
 export * from './RegisterPage';
 export * from './LoginPage';
 export * from './DeleteUserPage';
+export * from './InvitePage';
+export * from './RegisterFromInvitationPage';

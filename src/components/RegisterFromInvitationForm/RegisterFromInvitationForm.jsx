@@ -1,11 +1,12 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import { styled } from '@mui/system';
-import { useParams, useNavigate } from 'react-router-dom';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useDispatch } from 'react-redux';
-import * as yup from 'yup';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+import { Controller, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
 import { register } from '../../redux/store';
 import logo from '../../assets/logo/logo2.png';
 
@@ -46,7 +47,7 @@ const schema = yup.object().shape({
   [formFields.repeatPassword]: yup.string().oneOf([yup.ref('password'), null])
 });
 
-export const RegisterToProjectPanel = () => {
+export const RegisterFromInvitationForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { role, productIdEncoded, emailEncoded } = useParams();
@@ -201,5 +202,3 @@ export const RegisterToProjectPanel = () => {
     </Box>
   );
 };
-
-export default RegisterToProjectPanel;

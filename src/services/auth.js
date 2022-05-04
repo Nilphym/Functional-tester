@@ -44,14 +44,14 @@ const authService = {
     return { project, user };
   },
 
-  async registerUser({ projectId, name, surname, email, password, role }) {
-    const user = await server().post({
+  async registerUser({ projectId, email, name, surname, password, role }) {
+    const user = await server.post({
       url: 'users',
       data: {
         projectId,
+        email,
         name,
         surname,
-        email,
         password,
         role
       }
@@ -59,16 +59,15 @@ const authService = {
     return user;
   },
 
-  async inviteUser({ projectId, email, role }) {
-    const user = await server().post({
+  async invite({ email, role }) {
+    const invitation = await server.post({
       url: 'users/invite',
       data: {
-        projectId,
         email,
         role
       }
     });
-    return user;
+    return invitation;
   },
 
   logout() {
@@ -78,6 +77,11 @@ const authService = {
   async getUsers() {
     const users = await server.get({ url: 'users' });
     return users;
+  },
+
+  async getInvitation({ id }) {
+    const invitation = await server.get({ url: `invitations/${id}` });
+    return invitation;
   },
 
   async forgotPassword({ id }) {

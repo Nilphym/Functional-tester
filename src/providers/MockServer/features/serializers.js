@@ -6,6 +6,11 @@ export const serializers = {
     include: ['bugs', 'users'],
     embed: true
   }),
+  invitation: RestSerializer.extend({
+    root: false,
+    include: ['project'],
+    embed: true
+  }),
   user: RestSerializer.extend({
     root: false,
     embed: true

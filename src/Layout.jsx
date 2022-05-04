@@ -13,11 +13,11 @@ const Layout = () => {
   const { token } = useSelector((state) => state.auth);
   const { pathname } = useLocation();
 
-  if (!token && !unsecuredPaths.includes(pathname)) {
+  if (!token && !unsecuredPaths.some((path) => pathname.includes(path))) {
     return <Navigate to="login" />;
   }
 
-  if (!token && unsecuredPaths.includes(pathname)) {
+  if (!token && unsecuredPaths.some((path) => pathname.includes(path))) {
     return (
       <Box sx={{ width: '100%', minHeight: '100vh' }}>
         <Outlet />
@@ -26,7 +26,7 @@ const Layout = () => {
     );
   }
 
-  if (token && unsecuredPaths.includes(pathname)) {
+  if (token && unsecuredPaths.some((path) => pathname.includes(path))) {
     return <Navigate to="dashboard" />;
   }
 

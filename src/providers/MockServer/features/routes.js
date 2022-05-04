@@ -95,6 +95,19 @@ export function routes() {
     return user;
   });
 
+  this.post('users/invite', (schema, request) => {
+    const { projectId } = decodeMirageJWT(request);
+    const { email, role } = JSON.parse(request.requestBody);
+
+    const invitation = schema.invitations.create({
+      projectId,
+      email,
+      role
+    });
+
+    return invitation;
+  });
+
   this.post('users/login', (schema, request) => {
     const { email } = JSON.parse(request.requestBody);
     const user = schema.users.findBy({ login: email });
@@ -119,6 +132,11 @@ export function routes() {
   this.get('users', (schema, request) => {
     const { projectId } = decodeMirageJWT(request);
     return schema.users.where({ projectId });
+  });
+
+  this.get('invitations/:id', (schema, request) => {
+    const { id } = request.params;
+    return schema.invitations.find(id);
   });
 
   this.delete('users/:id', (schema, request) => {
