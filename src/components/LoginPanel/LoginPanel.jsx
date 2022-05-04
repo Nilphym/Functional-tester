@@ -17,7 +17,8 @@ const Logo = styled('img')({
 });
 
 const Container = styled(Box)({
-  height: '100vh',
+  minHeight: '100vh',
+  padding: '1rem 0',
   margin: '0 auto',
   width: '20rem',
   display: 'flex',
@@ -57,6 +58,7 @@ const schema = yup.object().shape({
 });
 
 export const LoginPanel = () => {
+  const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
@@ -67,7 +69,6 @@ export const LoginPanel = () => {
     defaultValues,
     resolver: yupResolver(schema)
   });
-  const dispatch = useDispatch();
 
   useEffect(() => {
     const onClick = (evt) => {

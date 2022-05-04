@@ -19,7 +19,7 @@ const Layout = () => {
 
   if (!token && unsecuredPaths.includes(pathname)) {
     return (
-      <Box sx={{ width: '100%', height: '100vh' }}>
+      <Box sx={{ width: '100%', minHeight: '100vh' }}>
         <Outlet />
         <ToastContainer position="bottom-right" />
       </Box>
