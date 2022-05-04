@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker';
 
 import { DateTime } from 'luxon';
 import decodeMirageJWT from '../../../utils/decodeMirageJWT';
+import getRandomInt from '../../../utils/getRandomInt';
 import { roles, states, types, priorities, impacts } from '../constants';
 
 export function routes() {
@@ -10,6 +11,89 @@ export function routes() {
   this.namespace = '/api/';
 
   // * *** AUTH *** * //
+
+  this.post('projects', (schema, request) => {
+    const { name } = JSON.parse(request.requestBody);
+
+    const project = schema.projects.create({
+      name,
+      createdAt: DateTime.now().toISO()
+    });
+
+    const testPlan = schema.testPlans.create({ project, name: faker.company.catchPhrase() });
+    const testCategory = schema.testCategories.create({
+      project,
+      testPlan,
+      name: faker.company.catchPhrase()
+    });
+
+    let count = getRandomInt(1, 4);
+    let entryData = Array(count).fill(null);
+    entryData = entryData.map(() => {
+      const width = getRandomInt(2, 5);
+      const height = getRandomInt(2, 5);
+      const emptyTable = Array(height)
+        .fill(null)
+        .map(() => Array(width).fill(0));
+      return {
+        name: faker.commerce.department(),
+        table: emptyTable.map((row, index) =>
+          row.map(() => (index === 0 ? faker.database.column() : faker.lorem.word()))
+        )
+      };
+    });
+
+    const test = schema.tests.create({
+      testCategory,
+      name: faker.company.catchPhrase(),
+      preconditions: faker.lorem.sentences(1),
+      entryData,
+      result: faker.lorem.sentences(1),
+      executions: 0
+    });
+
+    count = getRandomInt(0, 2);
+    let testData = Array(count).fill(null);
+    testData = testData.map(() => {
+      const width = getRandomInt(2, 5);
+      const height = getRandomInt(2, 5);
+      const emptyTable = Array(height)
+        .fill(null)
+        .map(() => Array(width).fill(0));
+      return {
+        name: faker.commerce.department(),
+        table: emptyTable.map((row, index) =>
+          row.map(() => (index === 0 ? faker.database.column() : faker.lorem.word()))
+        )
+      };
+    });
+
+    schema.steps.create({
+      test,
+      name: faker.git.commitMessage(),
+      testData,
+      controlPoint: faker.lorem.sentences(1)
+    });
+
+    return project;
+  });
+
+  this.post('users', (schema, request) => {
+    const { projectId, name, surname, email, password, role } = JSON.parse(request.requestBody);
+    const projectName = schema.projects.find(projectId).name;
+
+    const user = schema.users.create({
+      projectId,
+      name,
+      surname,
+      email,
+      password,
+      role,
+      login: `${name}.${surname}@${projectName.replaceAll(' ', '-')}.com`.toLowerCase()
+    });
+
+    return user;
+  });
 
   this.post('users/login', (schema, request) => {
     const { email } = JSON.parse(request.requestBody);

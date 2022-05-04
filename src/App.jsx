@@ -5,15 +5,15 @@ import Layout from './Layout';
 import { RequireAuth } from './providers';
 import { Logout } from './containers';
 import {
-  LoginPanel,
-  RegisterPanel,
   ResetPasswordPanel,
   ForgotPasswordPanel,
   RegisterToProjectPanel,
   InviteUserToProjectPanel,
-  WelcomeUserToProjectPanel
+  WelcomeUserToProjectPanel,
+  DeleteUserPanel
 } from './components';
 import {
+  LoginPage,
   NotFound,
   AssignedBugsPage,
   ActiveBugsPage,
@@ -22,17 +22,17 @@ import {
   RetestBugsPage,
   DashboardPage,
   TestPlanPage,
-  TestPlanListPage
+  TestPlanListPage,
+  RegisterPage
 } from './pages';
-import DeleteUserPanel from './components/DeleteUserPanel/DeleteUserPanel';
 
 const App = () => {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route path="login" element={<LoginPanel />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="register" element={<RegisterPage />} />
         <Route path="logout" element={<Logout />} />
-        <Route path="register" element={<RegisterPanel />} />
         <Route path="reset_password" element={<ForgotPasswordPanel />} />
         <Route path="api/auth/:userId/:token" element={<ResetPasswordPanel />} />
         <Route path="invite_user" element={<InviteUserToProjectPanel />} />

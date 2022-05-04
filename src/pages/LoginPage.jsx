@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import { styled } from '@mui/system';
-import { Link } from 'react-router-dom';
-import { yupResolver } from '@hookform/resolvers/yup';
 import { useDispatch } from 'react-redux';
-import * as yup from 'yup';
+import { Link } from 'react-router-dom';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
+import * as yup from 'yup';
 
-import server from '../../services/server';
-import { login } from '../../redux/store';
-import logo from '../../assets/logo/logo2.png';
+import server from '../services/server';
+import { login } from '../redux/store';
+import logo from '../assets/logo/logo2.png';
 
 const Logo = styled('img')({
   width: '12.5rem'
@@ -57,7 +57,7 @@ const schema = yup.object().shape({
     .matches(RegExp('[!@#$%^&*(),.?":{}|<>]'), 'Password field must contain min. 1 special sign!')
 });
 
-export const LoginPanel = () => {
+export const LoginPage = () => {
   const dispatch = useDispatch();
   const {
     control,
@@ -93,7 +93,7 @@ export const LoginPanel = () => {
   }, []);
 
   const onSubmit = async ({ login: email, password }) => {
-    await dispatch(login({ email, password }));
+    dispatch(login({ email, password }));
 
     reset(defaultValues, {
       keepIsValid: true
@@ -143,13 +143,9 @@ export const LoginPanel = () => {
         >
           Login
         </Button>
-        <Box>
-          <Typography>Have you forgot your password?</Typography>
-          <Link to="/resetPassword">Reset password</Link>
-        </Box>
       </Form>
     </Container>
   );
 };
 
-export default LoginPanel;
+export default LoginPage;

@@ -1,15 +1,15 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { styled } from '@mui/system';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-
+import { Link, useNavigate } from 'react-router-dom';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+import { Controller, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { toast } from 'react-toastify';
-import logo from '../../assets/logo/logo2.png';
-import { registerProject } from '../../redux/store';
+import * as yup from 'yup';
+
+import { registerProject } from '../redux/store';
+import logo from '../assets/logo/logo2.png';
 
 const Logo = styled('img')({
   width: '12.5rem'
@@ -53,10 +53,13 @@ const defaultValues = {
 };
 
 const schema = yup.object().shape({
-  [formFields.projectName]: yup.string().required(),
-  [formFields.email]: yup.string().email().required(),
-  [formFields.name]: yup.string().required(),
-  [formFields.surname]: yup.string().required(),
+  [formFields.projectName]: yup.string().required('Project name field cannot be empty!'),
+  [formFields.email]: yup
+    .string()
+    .email('Email must be valid!')
+    .required('Email field cannot be empty'),
+  [formFields.name]: yup.string().required('Name field cannot be empty!'),
+  [formFields.surname]: yup.string().required('Surname field cannot be empty!'),
   [formFields.password]: yup
     .string()
     .required('Password field cannot be empty!')
@@ -65,10 +68,12 @@ const schema = yup.object().shape({
     .matches(RegExp('(.*[A-Z].*)'), 'Password field must contain min. 1 uppercase letter!')
     .matches(RegExp('(.*\\d.*)'), 'Password field must contain min. 1 digit!')
     .matches(RegExp('[!@#$%^&*(),.?":{}|<>]'), 'Password field must contain min. 1 special sign!'),
-  [formFields.repeatPassword]: yup.string().oneOf([yup.ref('password'), null])
+  [formFields.repeatPassword]: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must be the same!')
 });
 
-export const RegisterPanel = () => {
+export const RegisterPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -86,8 +91,9 @@ export const RegisterPanel = () => {
   });
 
   const onSubmit = ({ projectName, name, surname, email, password }) => {
-    dispatch(registerProject({ projectName, name, surname, email, password }));
-    navigate('/');
+    dispatch(registerProject({ projectName, name, surname, email, password })).finally(() =>
+      navigate('/')
+    );
   };
 
   return (
@@ -107,7 +113,7 @@ export const RegisterPanel = () => {
               label="Project Name"
               type="text"
               error={!!errors.projectName}
-              helperText={!!errors.projectName && 'Project Name field cannot be empty!'}
+              helperText={!!errors.projectName && errors.projectName.message}
               {...field}
             />
           )}
@@ -122,7 +128,7 @@ export const RegisterPanel = () => {
               label="Email"
               type="email"
               error={!!errors.email}
-              helperText={!!errors.email && 'Email field cannot be empty and must be in pattern!'}
+              helperText={!!errors.email && errors.email.message}
               {...field}
             />
           )}
@@ -137,7 +143,7 @@ export const RegisterPanel = () => {
               label="Name"
               type="text"
               error={!!errors.name}
-              helperText={!!errors.name && 'Name field cannot be empty!'}
+              helperText={!!errors.name && errors.name.message}
               {...field}
             />
           )}
@@ -152,7 +158,7 @@ export const RegisterPanel = () => {
               label="Surname"
               type="text"
               error={!!errors.surname}
-              helperText={!!errors.surname && 'Surname field cannot be empty!'}
+              helperText={!!errors.surname && errors.surname.message}
               {...field}
             />
           )}
@@ -167,11 +173,7 @@ export const RegisterPanel = () => {
               label="Password"
               type="password"
               error={!!errors.password}
-              helperText={
-                !!errors.password &&
-                `Password field cannot be empty and must contain min. 8 letters, 
-                  lowercase, uppercase, digit and special sign!`
-              }
+              helperText={!!errors.password && errors.password.message}
               {...field}
             />
           )}
@@ -187,7 +189,7 @@ export const RegisterPanel = () => {
               type="password"
               error={!!errors.repeatPassword || !!errors.password}
               helperText={
-                !!errors.repeatPassword || (!!errors.password && 'Passwords must be the same!')
+                !!errors.repeatPassword || (!!errors.password && errors.repeatPassword.message)
               }
               {...field}
             />
@@ -202,9 +204,11 @@ export const RegisterPanel = () => {
         >
           Register
         </Button>
+        <Box>
+          <Typography>Already have an account?</Typography>
+          <Link to="/">Log in</Link>
+        </Box>
       </Form>
     </Container>
   );
 };
-
-export default RegisterPanel;

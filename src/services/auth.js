@@ -4,9 +4,9 @@ import server from './server';
 import { TOKEN_KEY } from '../config';
 
 const roles = {
-  projectManager: 'projectManager',
-  developer: 'developer',
-  tester: 'tester'
+  projectManager: 'ProjectManager',
+  developer: 'Developer',
+  tester: 'Tester'
 };
 
 const authService = {

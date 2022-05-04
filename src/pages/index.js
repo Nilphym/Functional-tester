@@ -5,3 +5,5 @@ export * from './ErrorFallback';
 export * from './DashboardPage';
 export * from './TestPlanListPage';
 export * from './TestPlanPage';
+export * from './RegisterPage';
+export * from './LoginPage';

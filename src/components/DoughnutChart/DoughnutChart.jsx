@@ -98,19 +98,21 @@ export const DoughnutChart = ({ sx, name, label, data }) => {
         <Typography variant="overline">{name}</Typography>
         <ResponsiveContainer>
           <PieChart margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-            <Pie
-              cy="45%"
-              label={(props) => renderActiveShape({ ...props, count, label })}
-              data={formatedData}
-              innerRadius={50}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-            >
-              {formatedData.map((entry, index) => (
-                <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
+            {data && (
+              <Pie
+                cy="45%"
+                label={(props) => renderActiveShape({ ...props, count, label })}
+                data={formatedData}
+                innerRadius={50}
+                outerRadius={80}
+                fill="#8884d8"
+                dataKey="value"
+              >
+                {formatedData.map((entry, index) => (
+                  <Cell key={entry.name} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+            )}
           </PieChart>
         </ResponsiveContainer>
       </Box>

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getUsers, deleteUser } from '../../redux/store';
 import UserItem from './UserItem';
 
-const DeleteUserPanel = () => {
+export const DeleteUserPanel = () => {
   const dispatch = useDispatch();
   const { users, isLoadingUsers } = useSelector((state) => state.auth);
   const [refresh, useRefresh] = useState(false);
