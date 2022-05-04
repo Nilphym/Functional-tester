@@ -9,8 +9,7 @@ import {
   ForgotPasswordPanel,
   RegisterToProjectPanel,
   InviteUserToProjectPanel,
-  WelcomeUserToProjectPanel,
-  DeleteUserPanel
+  WelcomeUserToProjectPanel
 } from './components';
 import {
   LoginPage,
@@ -23,7 +22,8 @@ import {
   DashboardPage,
   TestPlanPage,
   TestPlanListPage,
-  RegisterPage
+  RegisterPage,
+  DeleteUserPage
 } from './pages';
 
 const App = () => {
@@ -54,7 +54,7 @@ const App = () => {
             <Route path="retest" element={<RetestBugsPage />} />
           </Route>
           <Route path="test_execution/:origin/:id" element={<TestRunPage />} />
-          <Route path="delete_user" element={<DeleteUserPanel />} />
+          <Route path="delete_user" element={<DeleteUserPage />} />
         </Route>
       </Route>
       <Route path="*" element={<NotFound />} />

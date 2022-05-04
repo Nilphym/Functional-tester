@@ -4,7 +4,7 @@ export * from './ChangeUserDataPanel/ChangeUserDataPanel';
 export * from './RegisterToProjectPanel/InviteUserToProjectPanel';
 export * from './RegisterToProjectPanel/RegisterToProjectPanel';
 export * from './RegisterToProjectPanel/WelcomeUserToProjectPanel';
-export * from './DeleteUserPanel/DeleteUserPanel';
+export * from './DeleteUserList/DeleteUserList';
 export * from './EnhancedTable/EnhancedTable';
 export * from './TestPlan/TestPlan';
 export * from './TestPlanList/TestPlanList';

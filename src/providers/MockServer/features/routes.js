@@ -116,7 +116,17 @@ export function routes() {
     };
   });
 
-  this.get('users', (schema) => {
+  this.get('users', (schema, request) => {
+    const { projectId } = decodeMirageJWT(request);
+    return schema.users.where({ projectId });
+  });
+
+  this.delete('users/:id', (schema, request) => {
+    const { id } = request.params;
+    return schema.users.find(id).destroy();
+  });
+
+  this.get('all_users', (schema) => {
     return schema.users.all();
   });
 

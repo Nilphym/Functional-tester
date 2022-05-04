@@ -78,7 +78,7 @@ export const LoginPage = () => {
     };
 
     const getUsers = async () => {
-      const users = await server.get({ url: 'https://fun-test-zpi.herokuapp.com/api/users' });
+      const users = await server.get({ url: 'https://fun-test-zpi.herokuapp.com/api/all_users' });
       users.forEach((user) => {
         toast.info(`${user.role}: ${user.login}`, {
           autoClose: false,
@@ -143,6 +143,10 @@ export const LoginPage = () => {
         >
           Login
         </Button>
+        <Box>
+          <Typography>Have you forgot your password?</Typography>
+          <Link to="/reset_password">Reset password</Link>
+        </Box>
       </Form>
     </Container>
   );
