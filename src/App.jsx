@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './Layout';
 import { RequireAuth } from './providers';
 import { Logout } from './containers';
-import { ResetPasswordPanel, ForgotPasswordPanel } from './components';
+// import { ResetPasswordPanel, ForgotPasswordPanel } from './components';
 import {
   LoginPage,
   NotFound,
@@ -31,13 +31,13 @@ const App = () => {
 
         <Route path="register">
           <Route index element={<RegisterPage />} />
-          <Route path="user/:invitation" element={<RegisterFromInvitationPage />} />
+          <Route path="user/:invitationId" element={<RegisterFromInvitationPage />} />
         </Route>
 
-        <Route path="reset_password">
+        {/* <Route path="reset_password">
           <Route index element={<ForgotPasswordPanel />} />
           <Route path=":userId/:token" element={<ResetPasswordPanel />} />
-        </Route>
+        </Route> */}
 
         <Route element={<RequireAuth />}>
           <Route path="dashboard" element={<DashboardPage />} />
