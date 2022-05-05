@@ -9,10 +9,10 @@ import DateAdapter from '@mui/lab/AdapterLuxon';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import store from './redux/store';
+import theme from './theme';
 import App from './App';
-import theme from './utils/theme';
 import { AuthManager, MockServer } from './providers';
-import { ErrorFallback } from './pages';
+import { ErrorFallback } from './pages/error_module';
 
 ReactDOM.render(
   <React.StrictMode>

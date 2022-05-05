@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { invite } from '../../redux/store';
-import { AuthForm, SubmitButton } from '../../components/auth_module';
+import { Form, SubmitButton } from '../../components/auth_module';
 import { PageContainer, ControlledTextField, ControlledSelect } from '../../components/common';
 import { createValidator, emailValidator } from '../../validators';
 import { showInvitation } from '../../mock/showInvitation';
@@ -57,7 +57,7 @@ export const InvitePage = () => {
 
   return (
     <PageContainer header="Invite user">
-      <AuthForm
+      <Form
         sx={{ width: '20rem', margin: '0 auto', justifyContent: 'center' }}
         onSubmit={handleSubmit(onSubmit)}
       >
@@ -70,7 +70,7 @@ export const InvitePage = () => {
         />
         <ControlledSelect id={formFields.role} control={control} label="Role" options={roles} />
         <SubmitButton>Invite</SubmitButton>
-      </AuthForm>
+      </Form>
     </PageContainer>
   );
 };

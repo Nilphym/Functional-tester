@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
 
-export const Form = ({ onSubmit, sx }) => {
+export const Form = ({ children, onSubmit, sx }) => {
   return (
     <Box
       sx={{
@@ -16,11 +16,14 @@ export const Form = ({ onSubmit, sx }) => {
       }}
       component="form"
       onSubmit={onSubmit}
-    />
+    >
+      {children}
+    </Box>
   );
 };
 
 Form.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
   onSubmit: PropTypes.func.isRequired,
   sx: PropTypes.object
 };

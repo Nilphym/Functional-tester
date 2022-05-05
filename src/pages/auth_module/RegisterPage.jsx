@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { registerProject } from '../../redux/store';
-import { Form, Container, Header, GoToLoginLink, SubmitButton } from '../../components/auth_module';
+import { Form, Container, Header, LoginLink, SubmitButton } from '../../components/auth_module';
 import { Logo, ControlledTextField } from '../../components/common';
 import {
   createValidator,
@@ -118,7 +118,7 @@ export const RegisterPage = () => {
           error={errors.repeatPassword}
         />
         <SubmitButton>Register</SubmitButton>
-        <GoToLoginLink />
+        <LoginLink />
       </Form>
     </Container>
   );
