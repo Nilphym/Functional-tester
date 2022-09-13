@@ -17,7 +17,8 @@ const initialState = {
   logged: !!token,
   token,
   users: [],
-  loading: true
+  loading: true,
+  invitation: {}
 };
 
 //* ****** GET REQUESTS ****** *//
@@ -190,6 +191,10 @@ export const authSlice = createSlice({
         toast.error(action.error.message);
       })
 
+      .addCase(getInvitation.fulfilled, (state, action) => {
+        state.invitation = action.payload;
+        toast.success(successMessages.deleteUser);
+      })
       .addCase(getInvitation.rejected, (_, action) => {
         toast.error(action.error.message);
       });
