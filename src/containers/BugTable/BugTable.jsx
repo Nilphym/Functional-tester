@@ -132,12 +132,20 @@ export const BugTable = ({ type }) => {
     });
   };
 
-  const onTake = (id) => {
+  const onTake = (id, name) => {
     setValue('id', id);
     setValue('developerId', developerId);
     setDialog({
       open: true,
-      content: <DialogContentText>You will be assigned to the bug.</DialogContentText>,
+      content: (
+        <DialogContentText>
+          <div style={{ marginBottom: '1rem' }}>
+            <span style={{ fontWeight: 'bold' }}>Bug name: </span>
+            <span>{name}</span>
+          </div>
+          <div>You will be assigned to the bug.</div>
+        </DialogContentText>
+      ),
       action: takeBug
     });
   };
@@ -162,6 +170,7 @@ export const BugTable = ({ type }) => {
                 type="number"
                 fullWidth
                 variant="standard"
+                InputProps={{ inputProps: { min: 1 } }}
                 {...field}
               />
             )}
@@ -319,9 +328,11 @@ export const BugTable = ({ type }) => {
           disableSortBy: true,
           Cell: ({
             row: {
-              original: { id }
+              original: { id, name }
             }
-          }) => <EnhancedIconButton icon={enhancedButtonIcons.take} onClick={() => onTake(id)} />,
+          }) => (
+            <EnhancedIconButton icon={enhancedButtonIcons.take} onClick={() => onTake(id, name)} />
+          ),
           minWidth: 75,
           maxWidth: 75,
           visible: type === bugTableTypes.active,

@@ -23,7 +23,7 @@ export const TestDataCell = ({ data }) => {
     >
       <TableDataDialog
         open={open}
-        data={data.map((item) => ({ ...item, code: item.name }))}
+        data={data?.map((item) => ({ ...item, code: item.name })) || []}
         chosenItem={chosenItem}
         handleShow={handleTestDataShow}
         handleClose={() => setOpen(false)}

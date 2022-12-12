@@ -13,7 +13,8 @@ import { login } from '../redux/store';
 import logo from '../assets/logo/logo2.png';
 
 const Logo = styled('img')({
-  width: '12.5rem'
+  width: '12.5rem',
+  marginBottom: '2rem'
 });
 
 const Container = styled(Box)({
@@ -103,7 +104,6 @@ export const LoginPage = () => {
   return (
     <Container>
       <Logo src={logo} alt="logo" />
-      <Typography variant="h2">Login Panel</Typography>
       <Form component="form" onSubmit={handleSubmit(onSubmit)}>
         <Controller
           name={formFields.login}
@@ -133,10 +133,10 @@ export const LoginPage = () => {
             />
           )}
         />
-        <Link to="/register">Register a new product -&gt;</Link>
         <Button type="submit" variant="contained" sx={{ height: '3rem' }}>
           Login
         </Button>
+        <Link to="/register">Register a new account -&gt;</Link>
         <Box>
           <Typography>Have you forgot your password?</Typography>
           <Link to="/reset_password">Reset password</Link>

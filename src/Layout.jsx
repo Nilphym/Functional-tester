@@ -21,7 +21,7 @@ const Layout = () => {
     return (
       <Box sx={{ width: '100%', minHeight: '100vh' }}>
         <Outlet />
-        <ToastContainer position="bottom-right" />
+        <ToastContainer position="top-right" />
       </Box>
     );
   }
@@ -41,7 +41,7 @@ const Layout = () => {
             icon: 'bugs',
             name: 'Bugs',
             links: [
-              { text: 'All bugs', destination: '/bugs' },
+              { text: 'Bug history', destination: '/bugs' },
               { text: 'Bugs to review', destination: '/bugs/retest' }
             ]
           },
@@ -56,7 +56,7 @@ const Layout = () => {
             icon: 'bugs',
             name: 'Bugs',
             links: [
-              { text: 'All bugs', destination: '/bugs' },
+              { text: 'Bug history', destination: '/bugs' },
               { text: 'Active bugs', destination: '/bugs/active' },
               { text: 'My bugs', destination: '/bugs/assigned' }
             ]
@@ -71,7 +71,7 @@ const Layout = () => {
           { icon: 'tests', text: 'Test plans', destination: '/test_plans' },
           { icon: 'bugs', text: 'Bugs', destination: '/bugs' },
           { icon: 'addUser', text: 'Invite user', destination: '/invite_user' },
-          { icon: 'deleteUser', text: 'Delete user', destination: '/delete_user' },
+          { icon: 'deleteUser', text: 'User list', destination: '/delete_user' },
           { icon: 'logout', text: 'Logout', destination: '/logout' }
         ]
       );
@@ -82,7 +82,7 @@ const Layout = () => {
     <Box sx={{ display: 'grid', gridTemplateColumns: 'min-content 1fr' }}>
       <Navbar links={links} />
       <Outlet />
-      <ToastContainer position="bottom-right" />
+      <ToastContainer position="top-right" />
     </Box>
   );
 };

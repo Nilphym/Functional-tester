@@ -104,7 +104,7 @@ const EntryData = ({ entryData }) => {
         <TableDataDialog
           handleClose={() => setOpen(false)}
           open={open}
-          data={entryData.map((item) => ({ ...item, code: item.name }))}
+          data={entryData?.map((item) => ({ ...item, code: item.name })) || []}
           chosenItem={chosenItem}
           handleShow={handleDataShow}
         />

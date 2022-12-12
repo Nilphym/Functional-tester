@@ -43,26 +43,28 @@ export const DeleteUserList = () => {
             <TableCell>Login</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Surname</TableCell>
+            <TableCell>Role</TableCell>
             <TableCell sx={{ width: 0 }} />
           </TableRow>
         </TableHead>
         <TableBody>
           {users
             .filter((user) => user.id !== userId)
-            .map(({ id, login, name, surname }) => (
+            .map(({ id, login, name, surname, role }) => (
               <TableRow key={id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                 <TableCell component="th" scope="row">
                   {login}
                 </TableCell>
                 <TableCell>{name}</TableCell>
                 <TableCell>{surname}</TableCell>
+                <TableCell>{role}</TableCell>
                 <TableCell>
                   <Button
                     sx={{ whiteSpace: 'nowrap' }}
                     onClick={() => handleDelete(id)}
                     variant="contained"
                   >
-                    Delete User
+                    Delete Account
                   </Button>
                 </TableCell>
               </TableRow>

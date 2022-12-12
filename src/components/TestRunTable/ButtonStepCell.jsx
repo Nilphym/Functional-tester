@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import { DatePicker } from '@mui/lab';
-import { Done, Error } from '@mui/icons-material';
+import { CheckBox, CheckBoxOutlineBlank, Error } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 import { useDropzone } from 'react-dropzone';
 import {
@@ -85,12 +85,12 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
       return (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-            <IconButton component="span" color="primary" size="small" onClick={handleNextStep}>
-              <Done />
+            <IconButton component="span" color="success" size="small" onClick={handleNextStep}>
+              <CheckBoxOutlineBlank />
             </IconButton>
             <IconButton
               component="span"
-              color="primary"
+              color="error"
               size="small"
               onClick={() => setOpenErrorDialog(true)}
             >
@@ -253,11 +253,11 @@ export const ButtonStepCell = ({ index, stepId, testId, useTableStepsRef }) => {
               (state) => state === 'error' || currentState[lastStepNumber] === 'done'
             )}
             component="span"
-            color="primary"
+            color="success"
             size="small"
             onClick={() => clearAction(index)}
           >
-            <Done />
+            <CheckBox />
           </IconButton>
         </Box>
       );

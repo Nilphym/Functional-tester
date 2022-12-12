@@ -16,6 +16,7 @@ import { grey } from '@mui/material/colors';
 import { styled, useTheme } from '@mui/system';
 import AddReactionIcon from '@mui/icons-material/AddReaction';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { useNavigate } from 'react-router';
 
 import { NavProfile } from './NavProfile';
 import { NavLink } from './NavLink';
@@ -34,20 +35,28 @@ const icons = {
 };
 
 const Logo = styled('img')({
-  width: '8rem'
+  width: '8rem',
+  cursor: 'pointer'
 });
 
 const SmallLogo = styled('img')({
   width: '2rem',
-  margin: '2.7rem 0'
+  margin: '2.7rem 0',
+  cursor: 'pointer'
 });
 
 export const Navbar = ({ links }) => {
   const [open, setOpen] = useState(true);
   const { pathname } = useLocation();
-  const { name, surname } = useSelector((state) => state.auth.token) ?? { name: '', surname: '' };
+  const { name, surname, projectName, role } = useSelector((state) => state.auth.token) ?? {
+    name: '',
+    surname: '',
+    role: '',
+    projectName: ''
+  };
   const theme = useTheme();
   const largeMedia = useMediaQuery(theme.breakpoints.up('lg'));
+  const navigate = useNavigate();
 
   const toggleOpen = () => {
     setOpen((open) => !open);
@@ -85,7 +94,7 @@ export const Navbar = ({ links }) => {
               justifyContent: 'space-between'
             }}
           >
-            <Logo src={logo} alt="logo" />
+            <Logo src={logo} alt="logo" onClick={() => navigate('/dashboard')} />
             {!largeMedia && (
               <IconButton onClick={toggleOpen}>
                 <MenuOpen sx={{ color: 'primary.dark' }} />
@@ -112,7 +121,7 @@ export const Navbar = ({ links }) => {
               )
             )}
           </Box>
-          <NavProfile name={`${name} ${surname}`} />
+          <NavProfile name={`${name} ${surname}`} projectName={projectName} role={role} />
         </Paper>
       </Slide>
       <Paper
@@ -132,7 +141,7 @@ export const Navbar = ({ links }) => {
         elevation={1}
         component={Box}
       >
-        <SmallLogo src={logoIcon} alt="logo" />
+        <SmallLogo src={logoIcon} alt="logo" onClick={() => navigate('/dashboard')} />
         <Divider sx={{ alignSelf: 'stretch' }} variant="middle" />
         <IconButton sx={{ margin: '1rem 0' }} onClick={toggleOpen}>
           <MenuIcon sx={{ color: 'primary.dark' }} />
@@ -161,7 +170,7 @@ export const Navbar = ({ links }) => {
           )}
         </Box>
         <Divider sx={{ alignSelf: 'stretch' }} variant="middle" />
-        <NavProfile compact name={`${name} ${surname}`} />
+        <NavProfile compact name={`${name} ${surname}`} projectName={projectName} role={role} />
       </Paper>
       <Fade in={!largeMedia && open} mountOnEnter unmountOnExit>
         <Box

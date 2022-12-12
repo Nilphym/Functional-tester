@@ -44,6 +44,11 @@ export const getAllBugs = createAsyncThunk('bugs/get/all', async () => {
 
 export const getBugsToFix = createAsyncThunk('bugs/get/fix', async () => {
   const bugs = await bugService.getBugs({ type: bugTypes.toFix });
+  bugs.sort((a, b) => {
+    const dateA = new Date(a.reportDate);
+    const dateB = new Date(b.reportDate);
+    return dateB - dateA;
+  });
   getRetests(bugs);
   return bugs;
 });
