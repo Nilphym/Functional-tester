@@ -44,8 +44,7 @@ const Layout = () => {
               { text: 'Bug history', destination: '/bugs' },
               { text: 'Bugs to review', destination: '/bugs/retest' }
             ]
-          },
-          { icon: 'logout', text: 'Logout', destination: '/logout' }
+          }
         ]
       );
       break;
@@ -60,8 +59,7 @@ const Layout = () => {
               { text: 'Active bugs', destination: '/bugs/active' },
               { text: 'My bugs', destination: '/bugs/assigned' }
             ]
-          },
-          { icon: 'logout', text: 'Logout', destination: '/logout' }
+          }
         ]
       );
       break;
@@ -71,8 +69,7 @@ const Layout = () => {
           { icon: 'tests', text: 'Test plans', destination: '/test_plans' },
           { icon: 'bugs', text: 'Bugs', destination: '/bugs' },
           { icon: 'addUser', text: 'Invite user', destination: '/invite_user' },
-          { icon: 'deleteUser', text: 'User list', destination: '/delete_user' },
-          { icon: 'logout', text: 'Logout', destination: '/logout' }
+          { icon: 'deleteUser', text: 'User list', destination: '/delete_user' }
         ]
       );
       break;

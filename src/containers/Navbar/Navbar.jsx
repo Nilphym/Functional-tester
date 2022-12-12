@@ -68,6 +68,7 @@ export const Navbar = ({ links }) => {
 
   return (
     <>
+      <NavProfile compact name={`${name} ${surname}`} projectName={projectName} role={role} />
       <Slide direction="right" in={open} mountOnEnter unmountOnExit>
         <Paper
           sx={{
@@ -121,7 +122,6 @@ export const Navbar = ({ links }) => {
               )
             )}
           </Box>
-          <NavProfile name={`${name} ${surname}`} projectName={projectName} role={role} />
         </Paper>
       </Slide>
       <Paper
@@ -170,7 +170,6 @@ export const Navbar = ({ links }) => {
           )}
         </Box>
         <Divider sx={{ alignSelf: 'stretch' }} variant="middle" />
-        <NavProfile compact name={`${name} ${surname}`} projectName={projectName} role={role} />
       </Paper>
       <Fade in={!largeMedia && open} mountOnEnter unmountOnExit>
         <Box
