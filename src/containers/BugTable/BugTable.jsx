@@ -37,6 +37,7 @@ import {
   resignFromBug,
   getBugOptions
 } from '../../redux/store';
+import SimpleDialog from '../../university/Dialog';
 
 export const bugTableTypes = {
   all: 'all',
@@ -433,6 +434,10 @@ export const BugTable = ({ type }) => {
           </DialogActions>
         </form>
       </Dialog>
+      <SimpleDialog
+        lskey="bugs"
+        content="Bug page will let you to explore all of the bugs in your product and edit informations about them. Depending on specific bug pages which are available for specific users there will be actions available for you in the last column of the table. Take a while to explore informations about bugs which are available for you."
+      />
     </>
   );
 };

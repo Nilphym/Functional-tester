@@ -10,7 +10,8 @@ import {
   BarChart,
   MenuOpen,
   Menu as MenuIcon,
-  Person
+  Person,
+  Info
 } from '@mui/icons-material';
 import { grey } from '@mui/material/colors';
 import { styled, useTheme } from '@mui/system';
@@ -31,7 +32,8 @@ const icons = {
   logout: <Login />,
   profile: <Person />,
   addUser: <AddReactionIcon />,
-  deleteUser: <DeleteOutlineIcon />
+  deleteUser: <DeleteOutlineIcon />,
+  info: <Info />
 };
 
 const Logo = styled('img')({
@@ -121,6 +123,12 @@ export const Navbar = ({ links }) => {
                 />
               )
             )}
+            <NavLink
+              icon={icons.info}
+              pathname="aerg"
+              text="Instructions"
+              destination="./instructions.pdf"
+            />
           </Box>
         </Paper>
       </Slide>
@@ -168,6 +176,13 @@ export const Navbar = ({ links }) => {
               />
             )
           )}
+          <NavLink
+            icon={icons.info}
+            pathname="fweg"
+            text="Instructions"
+            destination="./instructions.pdf"
+            compact
+          />
         </Box>
         <Divider sx={{ alignSelf: 'stretch' }} variant="middle" />
       </Paper>

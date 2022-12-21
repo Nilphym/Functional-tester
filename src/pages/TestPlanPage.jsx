@@ -3,6 +3,7 @@ import { Box, Typography } from '@mui/material';
 import { useParams } from 'react-router';
 
 import { TestPlan } from '../components';
+import SimpleDialog from '../university/Dialog';
 
 export const TestPlanPage = () => {
   const { name } = useParams();
@@ -22,6 +23,10 @@ export const TestPlanPage = () => {
         <span>{name}</span>
       </Typography>
       <TestPlan />
+      <SimpleDialog
+        lskey="testPlan"
+        content="From this view you can see all the test suites and cases of the selected test plan. You can also proceed to execute the test case of a specific test suite."
+      />
     </Box>
   );
 };

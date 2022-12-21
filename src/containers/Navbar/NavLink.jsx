@@ -26,8 +26,43 @@ const StyledLink = styled(Link, {
   })
 }));
 
+const StyledLinkX = styled('a', {
+  shouldForwardProp: (prop) => prop !== 'active' || prop !== 'compact'
+})(({ active, compact, theme }) => ({
+  padding: '1rem 2rem',
+  display: 'flex',
+  color: theme.palette.primary.dark,
+  textDecoration: 'none',
+  ...(compact && {
+    padding: '1.5rem 0',
+    justifyContent: 'center'
+  }),
+  ...(!active && {
+    '&:hover': {
+      backgroundColor: grey[50]
+    }
+  }),
+  ...(active && {
+    backgroundColor: blue[50]
+  })
+}));
+
 export const NavLink = ({ pathname, icon, text, destination, compact }) => {
   const regex = new RegExp(destination);
+  if (text === 'Instructions') {
+    return (
+      <StyledLinkX
+        compact={compact ? 'compact' : null}
+        active={null}
+        href={destination}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {icon}
+        {!compact && <Typography sx={{ paddingLeft: '1rem' }}>{text}</Typography>}
+      </StyledLinkX>
+    );
+  }
 
   return (
     <StyledLink
