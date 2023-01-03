@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 
 import { TestPlanList } from '../components';
+import SimpleDialog from '../university/Dialog';
 
 export const TestPlanListPage = () => {
   return (
@@ -18,6 +19,10 @@ export const TestPlanListPage = () => {
         Test Plans
       </Typography>
       <TestPlanList />
+      <SimpleDialog
+        lskey="testPlanList"
+        content="On test plans page you can see all the test plans you have created. You can also proceed to view the test suites of a specific test plan and search test plans by name."
+      />
     </Box>
   );
 };

@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { Navbar } from './containers';
 
-const unsecuredPaths = ['/login', '/reset_password', '/register'];
+const unsecuredPaths = ['/login', '/reset_password', '/register', '/home'];
 
 const Layout = () => {
   const { token } = useSelector((state) => state.auth);

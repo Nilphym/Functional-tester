@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 
 import { DeleteUserList } from '../components';
+import SimpleDialog from '../university/Dialog';
 
 export const DeleteUserPage = () => {
   return (
@@ -18,6 +19,10 @@ export const DeleteUserPage = () => {
         Users list
       </Typography>
       <DeleteUserList />
+      <SimpleDialog
+        lskey="delete"
+        content="This page let's you to check users in your product and let you to delete them."
+      />
     </Box>
   );
 };

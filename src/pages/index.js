@@ -10,3 +10,4 @@ export * from './LoginPage';
 export * from './DeleteUserPage';
 export * from './InvitePage';
 export * from './RegisterFromInvitationPage';
+export * from './HomePage';
