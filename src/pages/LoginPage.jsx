@@ -141,6 +141,7 @@ export const LoginPage = () => {
           <Typography>Have you forgot your password?</Typography>
           <Link to="/reset_password">Reset password</Link>
         </Box>
+        <Link to="/home">Home page</Link>
       </Form>
     </Container>
   );
